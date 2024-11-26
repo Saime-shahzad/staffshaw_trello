@@ -1,0 +1,35 @@
+.bar-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+     /* Center the loader vertically */
+  }
+  
+  .bar {
+    width: 4px;
+    height: 20px;
+    background-color: grey;
+    margin: 0 2px;
+    animation: barLoader 1s infinite;
+  }
+  
+  .bar:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+  
+  .bar:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+  
+  @keyframes barLoader {
+    0% {
+      transform: scaleY(1);
+    }
+    50% {
+      transform: scaleY(2);
+    }
+    100% {
+      transform: scaleY(1);
+    }
+  }
+  

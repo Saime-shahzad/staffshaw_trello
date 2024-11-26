@@ -1,0 +1,34 @@
+
+.control-hover :hover{
+font-size: 18px;
+color: #BC6F94;
+}
+.hoverControl :hover{
+    background-color: #F1F2F4;
+    border-radius: 10px;
+}
+
+.r6KV0yEdmnh3Op {display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 100%;
+    margin-top: 9px;
+    border-radius: 8px;
+    padding: 2px;
+    color: var(--ds-text-inverse, #ffffff);
+    font-size: 20px;
+    font-weight: bold;}
+    .BVceZHOoUszsgw{
+        background: linear-gradient(var(--ds-background-accent-green-bolder, #006644), var(--ds-background-accent-green-subtle, #00875a)); 
+    }
+    .ifNotNotifications{
+        height: 50vh !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center;
+        background-image: url(https://trello.com/assets/ee2660df9335718b1a80.svg);
+        background-repeat: no-repeat;
+        background-position: center;
+        padding-top: 180px;
+    }

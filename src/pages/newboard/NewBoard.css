@@ -1,0 +1,21 @@
+.header{
+    background-color: white;
+    padding: 20px;
+}
+.S-class-2 {display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5%;
+    height:55px;
+    margin-top: 9px;
+    border-radius: 8px;
+    padding: 5px;
+    color: var(--ds-text-inverse, #ffffff);
+    font-size: 20px;
+    font-weight: bold;}
+    .S-class-1{
+        background: linear-gradient(var(--ds-background-accent-green-bolder, #006644), var(--ds-background-accent-green-subtle, #00875a)); 
+    }
+    .parrent-addBoard {
+        max-width: 1150px;
+    }

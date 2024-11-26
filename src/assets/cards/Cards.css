@@ -1,0 +1,17 @@
+.ant-card-body{
+    padding: 7px !important;
+}
+.hoverControl:hover{
+    /* background-color: white !important; */
+    border: 2px solid #388BFF;
+    /* background-color: #F1F2F4 !important; */
+    border-radius: 10px !important;
+    cursor: pointer;
+}
+.dragging {
+    opacity: 1 !important;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+    background-color: white !important;
+   
+  }

@@ -1,0 +1,10 @@
+.ant-popover-arrow{
+    display: none !important;
+}
+.ant-popconfirm-buttons {
+    display: none !important; /* Hide the OK and Cancel buttons */
+  }
+  .ant-popconfirm-title{
+    font-size: 12px !important;
+    color: #5B6463;
+  }

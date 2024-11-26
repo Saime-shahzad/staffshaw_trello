@@ -1,0 +1,22 @@
+.styleButton:hover{
+    background-color: #A6C5E229;
+    cursor: pointer;
+}
+.fontSizeClass{
+    font-size: 13px;
+}
+.inputControl{
+    background-color:#BC6F94 !important;
+    color: white !important;
+}
+.ant-popconfirm-message-text{
+    width: 100% !important;
+}
+.control-hover :hover{
+font-size: 18px;
+color: #BC6F94;
+}
+.hoverControl :hover{
+    background-color: #F1F2F4;
+    border-radius: 10px;
+}
