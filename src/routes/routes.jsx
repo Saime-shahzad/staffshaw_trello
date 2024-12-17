@@ -6,6 +6,7 @@ import { Users } from "../pages/users/Users";
 import SignIn from "../pages/signIn/SignIn";
 import SignUp from "../pages/signUp/SignUp";
 import EditProfile from "../pages/editProfile/EditProfile";
+import { AllBoards } from "../pages/home/allBoards/AllBoards";
 
 
 
@@ -18,6 +19,7 @@ const publicRoutesList = [
   { path: "/sign-up", element: <SignUp /> },
   { path: "/sign-in", element: <SignIn /> },
   { path: "/profile", element: <EditProfile /> },
+  { path: "/board", element: <AllBoards /> },
  
 ];
 

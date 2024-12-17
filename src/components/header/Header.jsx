@@ -28,9 +28,9 @@ export const Header = () => {
     },
    
   ];
+  const localItems=localStorage.getItem("token")
 
   const getLastIndexs=projectsNames.slice(-2)
-  console.log("getLastIndexs>>>", getLastIndexs);
   
   const headerItems = [
     {
@@ -86,9 +86,9 @@ export const Header = () => {
   return (
     <div
       className="parrent-header d-flex justify-content-between"
-      style={{ backgroundColor: colors.theme }}
+      style={{ background: colors.theme }}
     >
-      <div className="d-flex  p-2">
+      <div className="d-flex  p-2" >
         {headerItems?.map((item, index) => {
           return (
             <div className="header-ItemsParrent px-2 d-flex fw-bold ">
@@ -120,7 +120,8 @@ export const Header = () => {
         <div className="searchDiv">
           <Input
             placeholder="Search Your Projects"
-            className="inputControl"
+            className=" text-white"
+            style={{background:colors.theme}}
             value="Search"
             prefix={icons.searchIcon}
           />
@@ -142,12 +143,20 @@ export const Header = () => {
           className="profileNameParrent  bg-info rounded-5 mx-2 d-flex align-items-center p-1 mt-1  "
           style={{ fontSize: "12px", height: "23px", cursor: "pointer" }}
         >
-              <Popover
+              <Popover  overlayInnerStyle={{
+   
+  
+      inset: "43px auto auto 810px", // Example inset adjustment
+    
+  }}
+   arrowPointAtCenter
+  placement="topLeft"
       content={<div>
         <div 
         onClick={() => {routeTo("/sign-in")}}
         style={{
-          cursor:"pointer"
+          cursor:"pointer",
+          display:localItems && "none"
         }}>
           Login </div>
          <div 
@@ -155,10 +164,32 @@ export const Header = () => {
             setOpen(false)
           }}
         style={{
-          cursor:"pointer"
+          cursor:"pointer",
+          display:localItems && "none"
+
         }}>
           Register </div>
-      </div>}
+         <div 
+          onClick={() => {routeTo("/profile") 
+            setOpen(false)
+          }}
+        style={{
+          cursor:"pointer"
+        }}>
+          Profile </div>
+         <div 
+          onClick={() => {
+            localStorage.removeItem("token")
+            window.location.assign("/sign-in");
+             
+            setOpen(false)
+          }}
+        style={{
+          cursor:"pointer"
+        }}>
+          Logout </div>
+      </div>
+      }
       trigger="click"
       open={open}
       onOpenChange={handleOpenChange}

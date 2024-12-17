@@ -7,9 +7,11 @@ export const addTask = createAsyncThunk(
   async (taskData, { rejectWithValue }) => {
     
     try {
-      const response = await userRequest.post("/tasks", taskData);
+      const response = await userRequest.post(`admin/list-cards/create-card/${taskData.cardId}`, taskData);
       // const response = await userRequest.post("/login", taskData);
-      return response.data;
+      console.log("response from taskApi>>", response);
+      
+      return response.status;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }

@@ -1,13 +1,25 @@
 import React, { 
+    useEffect,
     // useRef,
      useState } from 'react'
 import Tables from '../../components/tables/Tables'
 import { Buttons } from '../../assets/button/Buttons'
 import Modals from '../../assets/modals/Modals'
+import { useDispatch } from 'react-redux'
+import { getUsers } from '../../redux-store/users/userSlice'
+import { useSelector } from 'react-redux'
 // import { Inputs } from '../../assets/input/Inputs'
 
 export const Users = () => {
     const [isModalOpen , setIsModalOpen] =useState(false)
+    const dispatch=useDispatch()
+    const getusersData = useSelector(
+        (state) => state.user?.user
+      );
+    useEffect(() =>{
+       dispatch(getUsers())
+        
+    }, [dispatch])
     const handleuserAddModal=(() =>{
         setIsModalOpen(true)
     })
@@ -34,7 +46,7 @@ export const Users = () => {
         <Buttons className="text-white border-0" onClick={handleuserAddModal} text="Add User"  />
         </div>
         <div className='table-parrent'>
-        <Tables />
+        <Tables data={getusersData} />
         </div>
         {isModalOpen && <Modals isModalOpen={isModalOpen} body={credentislList} title="Add User" setIsModalOpen={setIsModalOpen}  />}
 

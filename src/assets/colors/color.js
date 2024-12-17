@@ -1,8 +1,10 @@
 const colors={
-    theme:"#AC4C7A",
+    theme:"linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180))",
     // theme:"#CD5A91",
-    darkTheme:"#9C446E",
-    themeLightColor:"#CD93AF",
+    darkTheme:"linear-gradient(60deg, rgb(48 20 211), rgb(215 76 164))",
+    // darkTheme:"#9C446E",
+    themeLightColor:"linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180))",
+    // themeLightColor:"#CD93AF",
     buttonColor:"#0055CC",
     ModalColor:"#F1F2F4",
     labelColor1:"#7EE2B8",

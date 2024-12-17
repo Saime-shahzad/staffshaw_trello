@@ -1,9 +1,9 @@
-
+/* 
 .ant-layout .ant-layout-sider{
     background:none !important;
-}
+} */
 .menueClass{
-    border: 1px solid #AAA7A7;
+    border-bottom: 1px solid #AAA7A7;
     cursor: pointer;
 }
  .r6KV0yEdmnh3Op {display: flex;
@@ -14,11 +14,13 @@ height: 100%;
 margin-top: 9px;
 border-radius: 8px;
 padding: 5px;
-color: var(--ds-text-inverse, #ffffff);
+color:  rgb(82, 67, 170) !important;
+/* color: var(--ds-text-inverse, #ffffff); */
 font-size: 20px;
 font-weight: bold;}
 .BVceZHOoUszsgw{
-    background: linear-gradient(var(--ds-background-accent-green-bolder, #006644), var(--ds-background-accent-green-subtle, #00875a)); 
+    background: #DEEBFF !important; 
+    /* background: linear-gradient(var(--ds-background-accent-green-bolder, #006644), var(--ds-background-accent-green-subtle, #00875a));  */
 }
 .text-class{
     font-size: 13px;
@@ -29,10 +31,10 @@ font-weight: bold;}
     background-color: #A6C5E229;
     cursor: pointer;
 }
-.borderClass{
+/* .borderClass{
     border: 1px solid #AAA7A7;
 
-}
+} */
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -54,5 +56,34 @@ font-weight: bold;}
 ::-webkit-scrollbar-thumb:window-inactive {
     background: #BC6F94; 
 }
-
+.custom-menu .ant-menu-item,
+.custom-menu .ant-menu-submenu-title {
+  color: white !important; /* Set text color to white */
+}
+.custom-menu .ant-menu-item,
+.custom-menu :hover {
+  color: linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180)) !important; /* Set text color to white */
+  /* background-color: white !important ; */
+}
   
+.custom-menu .ant-menu-item,
+.custom-menu{
+  color: white !important; /* Set text color to white */
+  background: linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180)) !important;
+}
+  
+.ant-layout-content{
+    background: linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180)) !important;
+}
+.ant-popover-inner{
+    /* background: linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180)) !important; */
+    color: black;
+}
+.controlHoverEffect :hover{
+    background-color: white !important;
+    color:black !important ;
+    border-radius: 5px !important;
+    padding: 2px !important;
+    background: linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180)) !important;
+
+}

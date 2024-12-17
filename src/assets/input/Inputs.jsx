@@ -26,11 +26,13 @@ export  const Inputs = forwardRef(({   prefix=false,
   placeholder,
   value,
   color,type,onChange,
+  autoComplete,
+  disabled,
   className,onCloseClick, suffix}, ref) => {
 
  
 
-  return <Input  prefix={prefix}  autoComplete="off"
+  return <Input  disabled={disabled ? true : false} prefix={prefix}  autoComplete={autoComplete}
   iconRender={(visible) => (visible ? icons.eyeInVisibleIcon : icons.eyeVisibleIcon)}
   onChange={onChange} ref={ref} type={type} placeholder={placeholder} suffix={
     <div onClick={onCloseClick} style={{cursor:"pointer"}}>

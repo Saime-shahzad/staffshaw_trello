@@ -6,9 +6,12 @@ import "./SignIn.css";
 import { toast } from "react-toastify";
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../../redux-store/auth/authSlice'
+// import { useRoutFunction } from "../../assets/usefulFunctions/UseFullFunctions";
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
+  // const routeTo=useRoutFunction()
+
 
   const dispatch=useDispatch()
 
@@ -32,24 +35,36 @@ const SignIn = () => {
   ];
 
  
-  
-  const onFinish = async (values) => {
-      const res = await dispatch(loginUser(values));
+  const onFinish = (async(values) => {
+    
+    const res = await dispatch(loginUser(values));
     console.log('res:', res);
-    setIsLoading(true);
-    setTimeout(() => {
+    
+    setIsLoading(true)
+    
+    
+    if(res.error){
+      
+      setTimeout(() => {
+        toast.error(res.payload.message)
+        setIsLoading(false)
+        
+        
+        
+      }, 2000);
+      
+    }
+    else{
+      setTimeout(() => {
+        localStorage.setItem("token" , res.payload?.data.token)
       toast.success("Successfully Login");
-      setIsLoading(false);
+      setIsLoading(false)
+      window.location.assign("/");
+      // routeTo("/")
     }, 3000);
-    // if(res){
-    //   setIsLoading(true)
-    //   setTimeout(() => {
-    //     setIsLoading(false)
 
-    //   }, 2000);
-
-    // }
-  };
+  }
+});
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };

@@ -7,9 +7,9 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (userData, { rejectWithValue }) => {
     
+    
     try {
-      const response = await userRequest.post("https://checkyourproject.com/trello/public/api/login", userData);
-      console.log("res>>>>login,", response);
+      const response = await userRequest.post("/auth/login", userData);
       
       // const response = await userRequest.post("/login", userData);
       return response.data;
@@ -22,12 +22,13 @@ export const loginUser = createAsyncThunk(
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (userData, { rejectWithValue }) => {
-    console.log("userdata...slice>>", userData);
     
     try {
-      const response = await axios.post("https://checkyourproject.com/trello/public/api/register", userData);
-      return response.data;
+      const response = await axios.post("https://checkyourproject.website/shaffshaw-trello/api/v1/auth/register", userData);
+
+      return response;
     } catch (error) {
+      
       return rejectWithValue(error.response.data);
     }
   }

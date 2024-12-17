@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const domain =
-  "https://checkyourproject.com/trello/public/api";
+  "https://checkyourproject.website/shaffshaw-trello/api/v1";
 
 const token = localStorage.getItem("token");
 export const userRequest = axios.create({

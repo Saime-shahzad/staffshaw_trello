@@ -26,7 +26,7 @@ import colors from './colors/color';
     plusIcon: <PlusSquareOutlined   />,
     codePenIcon: <CodepenOutlined />,
     downIcon: <DownOutlined style={{fontSize:"11px" , fontWeight:600}} />,
-    plusOutlineIcon: <PlusOutlined className='fs-6 p-1 ' style={{backgroundColor:"#C582A2"}} />,
+    plusOutlineIcon: <PlusOutlined className='fs-6 p-1 ' />,
     peopleGroupIcon: <UsergroupAddOutlined />,
     starIcon: <StarOutlined />,
     listIcon: <UnorderedListOutlined />,

@@ -1,15 +1,25 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { 
+  // useEffect,
+   useRef, useState } from "react";
 import { Card } from "antd";
 import "./Cards.css";
 import TextArea from "antd/es/input/TextArea";
 import { Buttons } from "../button/Buttons";
 import icons from "../icons";
 import Modals from "../modals/Modals";
+import { addList } from "../../redux-store/listSlice/listSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { addTask } from "../../redux-store/task/taskSlice";
 
-export const Cards = ({ icon, data, cardsName }) => {
+export const Cards = ({ icon, data, cardsName , boardId ,cardKey, cardlistId }) => {
+  
 
-  const [items, setItems] = useState(data);
-  const [itemCardName, setIsCardName] = useState(cardsName);
+  // const [itemCardName, setIsCardName] = useState(cardsName);
+  const [isAddList, setIsAddList] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const inputValue = useRef(null);
+  const dispatch=useDispatch()
 
   
 
@@ -36,10 +46,10 @@ export const Cards = ({ icon, data, cardsName }) => {
   };
 
   const dragEnd = (event) => { 
-    // console.log("event>>>>", event.target);
+    // // console.log("event>>>>", event.target);
     
     event.target.classList.remove("dragging");
-    // console.log("event.target>>>", event.target.innerText);
+    // // console.log("event.target>>>", event.target.innerText);
   
 
     
@@ -54,7 +64,7 @@ export const Cards = ({ icon, data, cardsName }) => {
     
     const data = JSON.parse(event.dataTransfer.getData("text/plain"));
     const dropTarget = event.target.closest(".droptarget");
-    // console.log(`Data:, `,event.target);
+    // // console.log(`Data:, `,event.target);
 
     if (dropTarget && !dropTarget.contains(document.getElementById(data.itemId))) {
       const draggedElement = document.getElementById(data.itemId);
@@ -62,10 +72,10 @@ export const Cards = ({ icon, data, cardsName }) => {
 
       // Log or use the card name where the card is dropped
       const taskId = draggedElement.getAttribute("data-tskId");
-      console.log(`draggedElement:`, draggedElement);
-      console.log(`Task ID:`, taskId);
+      // console.log(`draggedElement:`, draggedElement);
+      // console.log(`Task ID:`, taskId);
       
-      setIsCardName(cardsName)
+      // setIsCardName(cardsName)
       const dragedContent={
         cardNames:cardsName,
         content: draggedElement?.innerText,
@@ -74,35 +84,62 @@ export const Cards = ({ icon, data, cardsName }) => {
       console.log(`dragedContent, `, dragedContent);
     } 
    
-    // console.log(`updated Card name, `, itemCardName);
+    // // console.log(`updated Card name, `, itemCardName);
   };
 
-  useEffect(() => {
-    
-  }, [itemCardName])
   
-  const [isAddList, setIsAddList] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const inputValue = useRef(null);
+  
 
-  const handleAddList = () => {
-    setIsAddList(true);
+
+  const handleAddList = (e) => {
+    
+    setIsAddList(e);
   };
 
-  const handleAddCard = (e) => {
+  const handleAddCard =async (e) => {
     e.preventDefault();
-    console.log("e>>>>", inputValue?.current?.resizableTextArea?.textArea?.value);
     
-    setIsAddList(false);
-    const newItem = inputValue?.current?.resizableTextArea?.textArea?.value;
-    if (newItem) {
-      setItems([...items, { description: newItem }]);
+    setIsAddList("");
+    if(inputValue?.current?.resizableTextArea?.textArea.placeholder === "Add List"){
+      const description=inputValue?.current?.resizableTextArea?.textArea?.value
+      const finalobj={
+        boardId : String(boardId),
+        title:description
+      }
+          // await dispatch(addList({title : description}))
+       const response=   await dispatch(addList(finalobj))
+       if(response){
+
+         toast.success("List Added Successfully")
+       }
+
     }
+    else{
+      const taskDescription = inputValue?.current?.resizableTextArea?.textArea?.value;
+      const finalobj={
+        title:taskDescription,
+        cardId:inputValue?.current?.resizableTextArea?.textArea?.id
+      }
+      const response=dispatch(addTask(finalobj))
+      console.log("response>>>>", response);
+      if(response === 200){
+        toast.success("Task Added Successfully")
+      }
+      
+
+    }
+    // const newItem = inputValue?.current?.resizableTextArea?.textArea?.value;
+    // if (newItem) {
+    //   setItems([...items, { description: newItem }]);
+    // }
+    // console.log("items>>>", inputValue?.current?.resizableTextArea?.textArea?.id);
+    
   };
 
   return (
     <div className="card-parent d-flex flex-column">
       <Card
+      key={cardKey}
         title={cardsName}
         bordered={false}
         style={{ width: 300, backgroundColor: "#F1F2F4" }}
@@ -110,7 +147,7 @@ export const Cards = ({ icon, data, cardsName }) => {
         onDrop={drop}
         onDragOver={allowDrop}
       >
-        {items?.map((item, index) => (
+        {cardsName === "Add New List" ? " " : data?.map((item, index) => (
           <div
             key={index}
             className="parent d-flex justify-content-between bg-white hoverControl rounded-2 m-1 p-2"
@@ -118,7 +155,7 @@ export const Cards = ({ icon, data, cardsName }) => {
             draggable="true"
             onDragStart={(event) => dragStart(event, `dragtarget-${index}-${cardsName}`)}
             onDragEnd={dragEnd}
-            data-tskId={item.taskId}x
+            data-tskId={item.taskId}
           >
             <div 
 
@@ -132,11 +169,12 @@ export const Cards = ({ icon, data, cardsName }) => {
           </div>
         ))}
 
-        {isAddList ? (
+        { isAddList ? (
           <div className="textArea-Parent w-100 p-1 border-dark-subtle">
             <TextArea
+            id={cardlistId}
               ref={inputValue}
-              placeholder="Add Task"
+              placeholder= {isAddList === "listAdd" ? "Add List" : "Add Task"}
               className="textArea-control"
               autoSize={{ minRows: 3, maxRows: 5 }}
             />
@@ -144,12 +182,12 @@ export const Cards = ({ icon, data, cardsName }) => {
               <Buttons
                 className="fw-bold text-white"
                 type="button"
-                text="Add card"
+                text={isAddList === "listAdd" ? "Add List" : "Add Task"}
                 onClick={handleAddCard}
               />
               <div
                 className="p-1 mx-2"
-                onClick={() => setIsAddList(false)}
+                onClick={() => setIsAddList("")}
                 style={{ cursor: "pointer" }}
               >
                 {icons.popupclose}
@@ -159,9 +197,10 @@ export const Cards = ({ icon, data, cardsName }) => {
         ) : (
           <div
             className="parent d-flex border-1 justify-content-between bg-white hoverControl rounded-2 m-1 p-2"
-            onClick={handleAddList}
+            onClick={() => handleAddList(cardsName === "Add New List" ? "listAdd" :"taskAdd")}
+            // name={cardsName === "Add New List" ? "listAdd" :"taskAdd"}
           >
-            <div className="description-parent">Add Your task</div>
+            <div className="description-parent">{cardsName === "Add New List" ? "Add New List " :"Add Your task"}</div>
             <div>{icon}</div>
           </div>
         )}

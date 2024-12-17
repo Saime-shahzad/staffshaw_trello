@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { userRequest } from "../apiRouts/apiRouts";
 // import axios from "axios";
 
-export const addBoard = createAsyncThunk(
-  "board/addBoard",
+export const addBoardCards = createAsyncThunk(
+  "boardCards/addBoardCards",
   async (userData, { rejectWithValue }) => {
     try {
       const response = await userRequest.post("/board", userData);
@@ -16,22 +16,22 @@ export const addBoard = createAsyncThunk(
   }
 );
 
-export const getBaord = createAsyncThunk(
-  "board/getBaord",
+export const getBoardList = createAsyncThunk(
+  "boardCards/getBoardList",
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await userRequest.get(`/auth/workspaces/${userData}/boards`);
+      const response = await userRequest.get("/admin/boards/2");
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
-export const getWorkspaces = createAsyncThunk(
-  "board/getWorkspaces",
-  async ( userData, { rejectWithValue }) => {
+export const getListAgainstBoards = createAsyncThunk(
+  "boardCards/getListAgainstBoards",
+  async (userData, { rejectWithValue }) => {
     try {
-      const response = await userRequest.get("/auth/workspaces");
+      const response = await userRequest.get(`admin/board-lists/${userData}`);
       
       return response.data;
     } catch (error) {
@@ -40,61 +40,66 @@ export const getWorkspaces = createAsyncThunk(
   }
 );
 
-const boardSlice = createSlice({
-  name: "board",
+
+const boardCardsSlice = createSlice({
+  name: "boardCards",
   initialState: {
     boards: [],
-    workspaces:[],
+    listAgainstBoards: [],
     loading: false,
     error: null,
   },
 
   extraReducers: (builder) => {
-    builder.addCase(addBoard.pending, (state) => {
+    builder.addCase(addBoardCards.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(addBoard.fulfilled, (state, action) => {
+    builder.addCase(addBoardCards.fulfilled, (state, action) => {
       state.loading = false;
 
-      state.boards = action.payload;
+      state.boardCards= action.payload;
     });
-    builder.addCase(addBoard.rejected, (state, action) => {
+    builder.addCase(addBoardCards.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
 
     // get Boards here
-    builder.addCase(getBaord.pending, (state) => {
+    builder.addCase(getBoardList.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(getBaord.fulfilled, (state, action) => {
+    builder.addCase(getBoardList.fulfilled, (state, action) => {
+        
 
       state.loading = false;
 
-      state.boards = action.payload.boards;
+      state.boardCards= action.payload.boards;
     });
-    builder.addCase(getBaord.rejected, (state, action) => {
+    builder.addCase(getBoardList.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
-    // get workspaces here
-    builder.addCase(getWorkspaces.pending, (state) => {
+
+    // getListsAgainstBoards here
+    builder.addCase(getListAgainstBoards.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(getWorkspaces.fulfilled, (state, action) => {
+    builder.addCase(getListAgainstBoards.fulfilled, (state, action) => {
+        
 
       state.loading = false;
 
-      state.workspaces = action.payload.workspaces;
+      state.listAgainstBoards= action.payload.boardLists;
     });
-    builder.addCase(getWorkspaces.rejected, (state, action) => {
+    builder.addCase(getListAgainstBoards.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
+   
   },
 });
 
-export default boardSlice.reducer;
+export default boardCardsSlice.reducer;

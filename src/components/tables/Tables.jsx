@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { Table } from "antd";
 import { Inputs } from "../../assets/input/Inputs";
 import icons from "../../assets/icons";
+import Loader from "../../assets/loader/Loader";
 
-const Tables = () => {
+const Tables = ({data}) => {
   const [isOpen, setIsOpen] = useState("");
-  console.log("isOpen>>", isOpen);
 
-  const handleSearchName = (item) => {
-    setIsOpen("Name");
+  const handleSearchByName = (item) => {
+    setIsOpen("full_name");
   };
 
-  const handleSearchAddress = (item) => {
-    setIsOpen("Address");
+  const handleSearchByEmail = (item) => {
+    setIsOpen("email");
   };
 
   const onCloseClick = () => {
@@ -21,88 +21,67 @@ const Tables = () => {
   const columns = [
     {
       title:
-        isOpen !== "Name" ? (
-          <div onClick={(e) => handleSearchName(e)}>Address</div>
+        isOpen !== "full_name" ? (
+          <div onClick={(e) => handleSearchByName(e)}>Full Name</div>
         ) : (
-          <div value="Name">
+          <div value="full_name">
             <Inputs
-              placeholder="Search by Name"
+              placeholder="Search by Full Name"
               suffix={icons.popupclose}
               onCloseClick={onCloseClick}
             />
           </div>
         ),
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "full_name",
+      key: "full_name",
     },
 
     {
       title:
-        isOpen !== "Address" ? (
-          <div onClick={(e) => handleSearchAddress(e)}>Address</div>
+        isOpen !== "email" ? (
+          <div onClick={(e) => handleSearchByEmail(e)}>Email</div>
         ) : (
-          <div value="Address">
+          <div value="email">
             <Inputs
-              placeholder="Search by Address"
+              placeholder="Search by Email"
               suffix={icons.popupclose}
               onCloseClick={onCloseClick}
             />
           </div>
         ),
-      dataIndex: "address",
-      key: "address",
+      dataIndex: "email",
+      key: "email",
     },
   ];
-  const data = [
-    {
-      key: 1,
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-      description:
-        "My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.",
-    },
-    {
-      key: 2,
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-      description:
-        "My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.",
-    },
-    {
-      key: 3,
-      name: "Not Expandable",
-      age: 29,
-      address: "Jiangsu No. 1 Lake Park",
-      description: "This not expandable",
-    },
-    {
-      key: 4,
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-      description:
-        "My name is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park.",
-    },
-  ];
-  return (
+    return (
+      <>
+     {!data ?
+     <div>
+      <Loader />
+     </div>
+     
+     :
     <Table
       columns={columns}
       filterSearch={true}
+    
       expandable={{
-        expandedRowRender: (record) => (
+        expandedRowRender: ((record) => {
+          return(
           <p
             style={{
               margin: 0,
             }}
           >
-            {record.description}
+            {record.email}
           </p>
-        ),
+        )}),
+        
       }}
+      
       dataSource={data}
-    />
+    />}
+     </>
   );
 };
 export default Tables;
