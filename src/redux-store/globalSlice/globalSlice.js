@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { userRequest } from "../apiRouts/apiRouts";
 // import axios from "axios";
 
 export const addGlobalData = createAsyncThunk(
     "global/addGlobalData",
     async (addGlobalDataData, { rejectWithValue }) => {
-      console.log("addGlobalDataData>>>", addGlobalDataData);
   
       try {
         // Simulate API call (replace this with actual API logic)
@@ -23,6 +23,27 @@ export const addGlobalData = createAsyncThunk(
       }
     }
   );
+export const getDashboardData = createAsyncThunk(
+    "global/getDashboardData",
+    async (dashboardData, { rejectWithValue }) => {
+      console.log("addGlobalDataData>>>", getDashboardData);
+  
+      try {
+        // Simulate API call (replace this with actual API logic)
+        const response = await userRequest.get("admin/dashboard", dashboardData);
+        return response.data;
+  
+        // For now, return the data directly
+      } catch (error) {
+        console.log("Error in addGlobalData:", error);
+  
+        // Ensure meaningful error data is passed to the reducer
+        return rejectWithValue(
+          error.response?.data || error.message || "An unknown error occurred"
+        );
+      }
+    }
+  );
   
 
 
@@ -31,6 +52,7 @@ const globalSlice = createSlice({
     name: "global",
     initialState: {
       addglobal: [],
+      dashboardData:[],
       lastClickedItem: null, // Add this for storing the last clicked item
       loading: false,
       error: null,
@@ -48,6 +70,21 @@ const globalSlice = createSlice({
         state.lastClickedItem = action.payload; // Store the last clicked item
       });
       builder.addCase(addGlobalData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+      /// dashboard Data collection//
+      builder.addCase(getDashboardData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      });
+      builder.addCase(getDashboardData.fulfilled, (state, action) => {
+        console.log("Payload:", action.payload.data.workspaces);
+        state.loading = false;
+        state.dashboardData = action.payload.data.workspaces; // Store the last clicked item
+      });
+      builder.addCase(getDashboardData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

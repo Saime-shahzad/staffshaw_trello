@@ -6,15 +6,16 @@ import "./Index.css";
 import icons from "../../assets/icons";
 import Popup from "../../assets/select/Popup";
 import { FilterComp } from "../../assets/others/Others";
-import {  Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { getBoardList } from "../../redux-store/bordCards/boardCardsSlice";
 
 import AppRoutes from "../../routes/index";
-import { Menu } from 'antd';
-import { SettingOutlined } from '@ant-design/icons';
-// import { CardsSection } from "../../components/cardsSection/CardsSection";
+import { Menu } from "antd";
+import { SettingOutlined } from "@ant-design/icons";
+import { getDashboardData } from "../../redux-store/globalSlice/globalSlice";
+import { CardsSection } from "../../components/cardsSection/CardsSection";
 
 // import {Inputs} from "../../assets/input/Inputs"
 // import DraggableComponent from "../../components/dragAndDrop/DraggableComponent";
@@ -26,14 +27,15 @@ const Index = () => {
   // ya bhi baad ka liye roki ha state
   const [isBoardId, setIsBoardId] = useState(null);
   const [isBoardName, setIsBoardName] = useState({});
+  console.log("isBoardName>>>>", isBoardName);
+
   const [open, setOpen] = useState(false);
- 
+
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
- 
 
-  const location=useLocation()
+  const location = useLocation();
   const dispatch = useDispatch();
   // const routeTo=useRoutFunction()
   const navigate = useNavigate();
@@ -41,100 +43,97 @@ const Index = () => {
   const getBoardCardsNames = useSelector(
     (state) => state.boardCards?.boardCards
   );
+  const getAdminDashboardData = useSelector(
+    (state) => state.globalData?.dashboardData
+  );
   
-  
-  const dynamicSideBarItems=[
+
+  const dynamicSideBarItems = [
     {
-      id:"1",
-      title:"Add Your WorkSpace",
-      link:"/add-board",
-      icons:icons.appStoreOutlined
-      
+      id: "1",
+      title: "Add Your WorkSpace",
+      link: "/add-board",
+      icons: icons.appStoreOutlined,
     },
     {
-      id:"2",
-      title:"Users",
-      link:"/users",
-      icons:icons.peopleGroupIcon
-      
+      id: "2",
+      title: "Users",
+      link: "/users",
+      icons: icons.peopleGroupIcon,
     },
-   
-    {
-      key: 'sub1',
-      label: 'Project',
+    ...getAdminDashboardData.map((item) => ({
+      key: "sub1",
+      label: item.name,
       icon: <SettingOutlined />,
-      children:getBoardCardsNames?.map((item) => {
-         
-      const getItems=  {
-          key: item.id,
-          label: item.title,
-        } 
-        return getItems
-      
-      
-      })
-     
-    },
-  ]
+      children: item.boards?.map((item) => ({
+        key: item.id,
+        label: item.title,
+      })),
+    })),
+  ];
+
   useEffect(() => {
+    dispatch(getDashboardData());
     dispatch(getBoardList());
-  }, [dispatch , isBoardId]);
-  useEffect(()=>{
-    if(getBoardCardsNames && location.pathname === "/board" ){
-    //  setIsIdLocalstorage( localStorage.getItem("b-id"))
-     const clickedItem =
-     getBoardCardsNames &&
-     getBoardCardsNames.find((item) => String(item.id) === localStorage.getItem("b-id"));
-setIsBoardName(clickedItem)
+  }, [dispatch, isBoardId]);
+  useEffect(() => {
+    if (getAdminDashboardData && location.pathname === "/board") {
+      //  setIsIdLocalstorage( localStorage.getItem("b-id"))
+      const clickedItem2 =
+        getAdminDashboardData &&
+        getAdminDashboardData.flatMap((item) => {
+          return item.boards?.filter(
+            (item) => String(item.id) === localStorage.getItem("b-id")
+          );
+        });
+  console.log("clickedItem2>>>>", clickedItem2);
 
-      
+      //  const clickedItem =
+      //  getBoardCardsNames &&
+      //  getBoardCardsNames.find((item) => String(item.id) === localStorage.getItem("b-id"));
+      setIsBoardName(clickedItem2[0]);
     }
-    
-  } , [location.pathname , getBoardCardsNames , isBoardId])
- 
-  const onMenueClick = async (e , id) => {
-    // e.domEvent.preventDefault();
-     // Prevent default behavior
-     if (e.preventDefault) {
-       
-       e.preventDefault(); // Prevents any default behavior, if applicable
-      }
-  
-    const clickedItemKey = id ? String(id):e.key;
-  
-   
-      const clickedItem =
-        getBoardCardsNames &&
-        getBoardCardsNames.find((item) => String(item.id) === clickedItemKey);
+  }, [location.pathname, getAdminDashboardData]);
 
-  
-      if (clickedItem) {
-        setIsBoardId(clickedItem.id);
-        localStorage.setItem("b-id" , clickedItem.id)
-        navigate("/board", { state: clickedItem.id }); 
-        setIsBoardName(clickedItem)
-        
-      }
-     
+  const onMenueClick = async (e, id) => {
+   
+    if (e.preventDefault) {
+      e.preventDefault(); // Prevents any default behavior, if applicable
+    }
+
+    const clickedItemKey = id ? String(id) : e.key;
+
+    
+    const clickedItem2 =
+      getAdminDashboardData &&
+      getAdminDashboardData.flatMap((item) => {
+        return item.boards?.filter(
+          (list) => String(list.id) === clickedItemKey
+        );
+      });
+
+    if (clickedItem2[0]) {
+      setIsBoardId(clickedItem2[0].id);
+      localStorage.setItem("b-id", clickedItem2[0].id);
+      navigate("/board", { state: clickedItem2[0].id });
+      setIsBoardName(clickedItem2[0] && clickedItem2[0]);
+    }
+
     // else {
-      
-      
+
     //   setTimeout(() => {
     //     const clickedItem =
     //     getBoardCardsNames &&
     //     getBoardCardsNames.find((item) => String(item.id) === clickedItemKey);
     //     console.log("clickedItem>>>", clickedItem);
-        
+
     //     if (clickedItem) {
     //       setIsBoardId(clickedItem.id);
-    //       navigate("/", { state: clickedItem.id }); 
+    //       navigate("/", { state: clickedItem.id });
     //     }
     //   }, 100); // Ensure routing is complete
     // }
   };
-  
-  
- 
 
   return (
     <Layout
@@ -147,25 +146,24 @@ setIsBoardName(clickedItem)
         width={!collapsed ? "250" : "20"}
         collapsed={collapsed}
         className="borderClass"
-        style={{background:colors.darkTheme}}
-        
+        style={{ background: colors.darkTheme }}
       >
         <div className="demo-logo-vertical" />
         <div className="sidebar-options  ">
           {!collapsed ? (
             <div className="parrent">
-              
               <div className="menueClass d-flex ">
-
                 <div class="BVceZHOoUszsgw r6KV0yEdmnh3Op">S</div>
-               
-                <div className=" text-white text-class  my-1 px-2 d-flex ">
-                <Link to="/"  style={{textDecoration:"none" , color:"white"}}>
-                Staffshaw Workspace <br />
-                free
 
-</Link>
-                  
+                <div className=" text-white text-class  my-1 px-2 d-flex ">
+                  <Link
+                    to="/"
+                    style={{ textDecoration: "none", color: "white" }}
+                  >
+                    Staffshaw Workspace <br />
+                    free
+                  </Link>
+
                   <div
                     className="m-1 my-3 cursor-pointer"
                     onClick={(value) => setCollapsed(value)}
@@ -174,49 +172,43 @@ setIsBoardName(clickedItem)
                   </div>
                 </div>
               </div>
-              {dynamicSideBarItems?.map((item) =>{
-                return(
+              {dynamicSideBarItems?.map((item) => {
+                return (
                   <>
-                  {item.key === "sub1" ? 
-                   <Menu
-                   onClick={(e) => onMenueClick(e)}
-                   className=" custom-menu"
-                   style={{
-                     width: "100%",
-                    //  backgroundColor:colors.darkTheme 
-                   }}
-                   
-                   mode="inline"
-                   items={[item]}
-                 />
-             
-                  
-                :
-                  <Link to={item.link} className="text-decoration-none">
-              <div
-                className="addworkSpace-parrent border-0 mt-1  "
-                style={{ cursor: "pointer" }}
-              >
-                <div className=" d-flex ">
-                  <div
-                    className="m-1 my-2  text-white  "
-                    // onClick={(value) => setCollapsed(value)}
-                  >
-                    {item.icon}
-                  </div>
-                  <div className=" text-white align-items-center  my-1 px-2 d-flex ">
-                    {item.title}
-                  </div>
-                 
-                </div>
-              </div>
-                </Link>}
+                    {item.key === "sub1" ? (
+                      <Menu
+                        onClick={(e) => onMenueClick(e)}
+                        className=" custom-menu"
+                        style={{
+                          width: "100%",
+                          //  backgroundColor:colors.darkTheme
+                        }}
+                        mode="inline"
+                        items={[item]}
+                      />
+                    ) : (
+                      <Link to={item.link} className="text-decoration-none">
+                        <div
+                          className="addworkSpace-parrent border-0 mt-1  "
+                          style={{ cursor: "pointer" }}
+                        >
+                          <div className=" d-flex ">
+                            <div
+                              className="m-1 my-2  text-white  "
+                              // onClick={(value) => setCollapsed(value)}
+                            >
+                              {item.icon}
+                            </div>
+                            <div className=" text-white align-items-center  my-1 px-2 d-flex ">
+                              {item.title}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    )}
                   </>
-                )
+                );
               })}
-              
-              
-                
             </div>
           ) : (
             <div
@@ -238,10 +230,13 @@ setIsBoardName(clickedItem)
             background: colors.theme,
           }}
         >
-          
           <div className="headesss d-flex justify-content-between">
             <div className="fs-6 fw-bolder ">
-              <span className="p-2 styleButton">{location.pathname === "/board" ? isBoardName.title : "Select Bord"}</span>
+              <span className="p-2 styleButton">
+                {location.pathname === "/board"
+                  ? isBoardName?.title
+                  : "Select Bord"}
+              </span>
               <span className=" mx-1 p-2 text-white styleButton">
                 {icons.starIcon}
               </span>
@@ -250,36 +245,31 @@ setIsBoardName(clickedItem)
               </span>
               <span className=" mx-1 text-white p-2 rounded-1   styleButton">
                 <span>
-                 
                   <span className="mx-2">
-                    
-                 
-                         <Popover className=""
-      content={
-        getBoardCardsNames?.map((item) => {
-          return(
-            
-      <div className="controlHoverEffect ">
-        <div 
-      key={item.id}
-        onClick={(e) =>onMenueClick(e , item.id)}
-        style={{
-          cursor:"pointer"
-        }}>
-          {item.title} </div>
-         
-      </div> )
-       } )}
-      trigger="click"
-      open={open}
-      onOpenChange={handleOpenChange}
-    >
-    {icons.listIcon}  Boards <span>{icons.downIcon}</span>
-          
-    </Popover>
-                     
-                     </span>
-                  
+                    <Popover
+                      className=""
+                      content={getBoardCardsNames?.map((item) => {
+                        return (
+                          <div className="controlHoverEffect ">
+                            <div
+                              key={item.id}
+                              onClick={(e) => onMenueClick(e, item.id)}
+                              style={{
+                                cursor: "pointer",
+                              }}
+                            >
+                              {item.title}{" "}
+                            </div>
+                          </div>
+                        );
+                      })}
+                      trigger="click"
+                      open={open}
+                      onOpenChange={handleOpenChange}
+                    >
+                      {icons.listIcon} Boards <span>{icons.downIcon}</span>
+                    </Popover>
+                  </span>
                 </span>
               </span>
             </div>
@@ -306,15 +296,14 @@ setIsBoardName(clickedItem)
           }}
         >
           <div
-          style={{
-            padding: 24,
-            minHeight: "100vh", // Full viewport height
-            width: location.pathname === "/bord" ? "100%" : "100%",
-            overflow:"scroll",
-            // background: colors.theme,
-            backgroundSize:"cover"
-          }}
-          
+            style={{
+              padding: 24,
+              minHeight: "100vh", // Full viewport height
+              width: location.pathname === "/bord" ? "100%" : "100%",
+              overflow: "scroll",
+              // background: colors.theme,
+              backgroundSize: "cover",
+            }}
           >
             {/* <Routes>
               <Route path="/" element={<CardsSection />} />
@@ -327,10 +316,10 @@ setIsBoardName(clickedItem)
             {/* <DraggableComponent  /> */}
           </div>
         </Content>
-        {/* <div className="d-none">
+        <div className="d-none">
 
-        {isBoardId && <CardsSection getBoardId={isBoardId} />}
-        </div> */}
+        {isBoardName ? <CardsSection workspace_id={isBoardName?.workspace_id} dataArray1={isBoardName } /> : ""}
+        </div>
       </Layout>
     </Layout>
   );
