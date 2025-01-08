@@ -1,5 +1,4 @@
 import React, {
-  useEffect,
   // useEffect,
   useRef,
   useState,
@@ -22,10 +21,9 @@ export const Cards = ({
   boardId,
   cardKey,
   cardlistId,
-  id
+  id,
 }) => {
-  console.log("data>>>>", data);
-  console.log("cardsName>>>>", cardsName);
+
 
   // const [itemCardName, setIsCardName] = useState(cardsName);
   const [isAddList, setIsAddList] = useState(false);
@@ -154,11 +152,16 @@ export const Cards = ({
         className="droptarget"
         onDrop={drop}
         onDragOver={allowDrop}
-      > 
-        {cardsName === "Add New List"
-          ? " "
-          : data?.map((item, index) => (
-              <div
+      >
+        {cardsName === "Add New List" ? (
+          " "
+        ) : (data ? (
+          data?.map((item, index) => 
+            
+            {
+              console.log("item>>>>" , item);
+              return (
+                <div
                 key={index}
                 className="parent d-flex justify-content-between bg-white hoverControl rounded-2 m-1 p-2"
                 id={`dragtarget-${index}-${cardsName}`}
@@ -183,7 +186,13 @@ export const Cards = ({
                 )}
                 <div>{icon}</div>
               </div>
-            ))}
+              )
+            }
+           
+          )
+        ) : (
+          <div>"No Cards in this List "</div>
+        ))}
 
         {isAddList ? (
           <div className="textArea-Parent w-100 p-1 border-dark-subtle">
