@@ -6,7 +6,13 @@ import "./Index.css";
 import icons from "../../assets/icons";
 import Popup from "../../assets/select/Popup";
 import { FilterComp } from "../../assets/others/Others";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { getBoardList } from "../../redux-store/bordCards/boardCardsSlice";
@@ -16,11 +22,59 @@ import { Menu } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { getDashboardData } from "../../redux-store/globalSlice/globalSlice";
 import { CardsSection } from "../../components/cardsSection/CardsSection";
+import NewBoard from "../newboard/NewBoard";
 
 // import {Inputs} from "../../assets/input/Inputs"
 // import DraggableComponent from "../../components/dragAndDrop/DraggableComponent";
 
 const { Content, Sider } = Layout;
+
+const dummyDataV1 = [
+  {
+    id: 1,
+    title: "To Do",
+    position: "1",
+    cards: [
+      {
+        id: 12,
+        taskId: 1232,
+        title: "abc1",
+      },
+      {
+        id: 13,
+        taskId: 1232,
+        title: "abc2",
+      },
+      {
+        id: 12,
+        taskId: 1232,
+        title: "abc3",
+      },
+      {
+        id: 12,
+        taskId: 1232,
+        title: "abc4",
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "In Progress",
+    position: "2",
+    cards: [],
+  },
+  {
+    id: 3,
+    title: "Done",
+    position: "3",
+    cards: [],
+  },
+  {
+    id: 11111,
+    title: "Add New List",
+    cards: [],
+  },
+];
 
 const Index = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -46,7 +100,6 @@ const Index = () => {
   const getAdminDashboardData = useSelector(
     (state) => state.globalData?.dashboardData
   );
-  
 
   const dynamicSideBarItems = [
     {
@@ -86,7 +139,7 @@ const Index = () => {
             (item) => String(item.id) === localStorage.getItem("b-id")
           );
         });
-  console.log("clickedItem2>>>>", clickedItem2);
+      console.log("clickedItem2>>>>", clickedItem2);
 
       //  const clickedItem =
       //  getBoardCardsNames &&
@@ -96,14 +149,12 @@ const Index = () => {
   }, [location.pathname, getAdminDashboardData]);
 
   const onMenueClick = async (e, id) => {
-   
     if (e.preventDefault) {
       e.preventDefault(); // Prevents any default behavior, if applicable
     }
 
     const clickedItemKey = id ? String(id) : e.key;
 
-    
     const clickedItem2 =
       getAdminDashboardData &&
       getAdminDashboardData.flatMap((item) => {
@@ -305,11 +356,21 @@ const Index = () => {
               backgroundSize: "cover",
             }}
           >
-            {/* <Routes>
-              <Route path="/" element={<CardsSection />} />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <CardsSection
+                    workspace_id={isBoardName?.workspace_id}
+                    dataArray1={isBoardName}
+                    // list={dummyDataV1}
+                    list={isBoardName?.lists}
+                  />
+                }
+              />
               <Route path="/add-board" element={<NewBoard />} />
-            </Routes> */}
-            <AppRoutes />
+            </Routes>
+            {/* <AppRoutes /> */}
 
             {/* <CardsSection />
             <NewBoard /> */}
@@ -317,8 +378,15 @@ const Index = () => {
           </div>
         </Content>
         <div className="d-none">
-
-        {isBoardName ? <CardsSection workspace_id={isBoardName?.workspace_id} dataArray1={isBoardName } /> : ""}
+          {/* {isBoardName ? (
+          <CardsSection
+            workspace_id={isBoardName?.workspace_id}
+            dataArray1={isBoardName}
+            list={dummyDataV1}
+          />
+          ) : (
+            ""
+          )} */}
         </div>
       </Layout>
     </Layout>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Cards } from "../../assets/cards/Cards";
 import icons from "../../assets/icons";
 import { useDispatch } from "react-redux";
@@ -6,163 +6,200 @@ import { useSelector } from "react-redux";
 import { getListAgainstBoards } from "../../redux-store/bordCards/boardCardsSlice";
 import { useLocation } from "react-router-dom";
 
-export const CardsSection = ({ getBoardId, dataArray1, workspace_id }) => {
+const dummyData = [
+  {
+    id: 1,
+    data: [
+      {
+        id: 12,
+        taskId: 1232,
+        title: "abc1",
+      },
+      {
+        id: 13,
+        taskId: 1232,
+        title: "abc2",
+      },
+      {
+        id: 12,
+        taskId: 1232,
+        title: "abc3",
+      },
+      {
+        id: 12,
+        taskId: 1232,
+        title: "abc4",
+      },
+    ],
+    cardsName: "{items.title}",
+    cardKey: "{items.id}",
+    cardlistId: "{items.id}",
+    cardId: "{workspace_id}",
+    icon: "{icons.editIcon}",
+  },
+];
+
+const dummyDataV1 = [
+  {
+    id: 1,
+    title: "To Do",
+    position: "1",
+    cards: [
+      {
+        id: 12,
+        taskId: 1232,
+        title: "abc1",
+      },
+      {
+        id: 13,
+        taskId: 1232,
+        title: "abc2",
+      },
+      {
+        id: 12,
+        taskId: 1232,
+        title: "abc3",
+      },
+      {
+        id: 12,
+        taskId: 1232,
+        title: "abc4",
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "In Progress",
+    position: "2",
+    cards: [],
+  },
+  {
+    id: 3,
+    title: "Done",
+    position: "3",
+    cards: [],
+  },
+  {
+    id: 11111,
+    title: "Add New List",
+    cards: [],
+  },
+];
+
+const addListOption = [
+  {
+    id: 11111,
+    title: "Add New List",
+    cards: [],
+  },
+];
+
+export const CardsSection = ({
+  getBoardId,
+  dataArray1,
+  workspace_id,
+  list,
+}) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [isDatas, setIsDatas] = useState([]);
+  const [boardData, setBoardData] = useState([]);
   const [isRefresh, setIsRefresh] = useState(null);
   const pageLocation = location.pathname === "/";
 
-  // const getBoardCardsNames = useSelector(
-  //   (state) => state.boardCards?.boardCards
-  // );
-  // const getListsNameAgainstCards = useSelector(
-  //   (state) => state.boardCards?.listAgainstBoards
-  // );
-  // console.log("getListsNameAgainstCards>>>>", getListsNameAgainstCards);
+  const prevBoardData = useRef();
 
-  console.log("dataArray1 top pr>>>>", dataArray1);
+  console.log("list >>>", list);
+  // console.log("boardData >>>", boardData);
+  // console.log("isDatas >>>", isDatas);
 
-  const addListOption = [
-    {
-      id: 11111,
-      title: "Add New List",
-      cards: [],
-    },
-  ];
+  useEffect(() => {
+    // console.log("boardData changed:", JSON.stringify(boardData));
+    setIsRefresh((prev) => !prev);
+  }, [boardData]);
+
   useEffect(() => {
     if (dataArray1?.lists) {
+      let lists = dataArray1?.lists?.map((item) => item);
       const updatedListOfCardNames = [
-        ...(Array.isArray(dataArray1.lists) ? dataArray1?.lists : []),
+        ...(Array.isArray(lists) ? lists : []),
         ...addListOption,
       ];
-      setIsDatas(
-        updatedListOfCardNames.length > 1 ? updatedListOfCardNames : []
+      // console.log("updatedListOfCardNames >>>", updatedListOfCardNames);
+      setBoardData(
+        prevBoardData.current
+          ? [...prevBoardData.current, ...updatedListOfCardNames]
+          : updatedListOfCardNames
       );
     }
   }, [dataArray1]);
-  console.log("dataArray1>>>>", dataArray1);
-  console.log("isDatas>>>>", isDatas);
 
-  useEffect(() => {
-    if (isDatas.length) {
-      setIsRefresh((prev) => !prev);
-    }
-  }, [isDatas, dataArray1]);
-
-  // const updatedListOfCardNames = [
-  //   ...(Array.isArray(getListsNameAgainstCards)
-  //     ? getListsNameAgainstCards
-  //     : []),
-  //   ...addListOption,
-  // ];
-  // useEffect(() => {
-  //   dispatch(getListAgainstBoards(getBoardId));
-  // }, [dispatch, getBoardId]);
-
-  // const cardArray = [
-  //   {
-  //     cardId: 1,
-  //     cardName: "To do",
-  //   },
-  //   {
-  //     cardId: 2,
-
-  //     cardName: "card2",
-  //   },
-  //   {
-  //     cardId: 3,
-
-  //     cardName: "card3",
-  //   },
-  //   {
-  //     cardId: 4,
-
-  //     cardName: "Add Card",
-  //   },
-  // ];
-  const dataArray = [
-    {
-      description: "task Description",
-      taskId: "1",
-    },
-    {
-      description: "task Description",
-      taskId: "2",
-    },
-    {
-      description: "task Description here you define",
-      taskId: "3",
-    },
-  ];
-  // const addCard = [
-  //   {
-  //     description: "task Description",
-  //   },
-  // ];
+  // console.log("Current boardData:", JSON.stringify(boardData));
 
   return (
     <div className="card-Parrent">
-      {[1 , 2 , 3].map((item) => {
-        return(
-          <div>
-            {item}
-          </div>
-        )
-      })}
-      {isDatas?.map((item) => {
-        return(
-          <div>
-            {item.id}
-          </div>
-        )
-      })}
-      <div className="card1 d-flex justify-content-between">
-        {
-          isDatas?.map((items, index) => {
-            console.log("inside content?", items);
-            
+      {Array.isArray(list) ? (
+        list?.map((item) => {
+          // console.log("Rendering item >>>", item);
 
-            return (
-              <div>
-                {index}
-              </div>
-              // <Cards
-              //   // data={items?.cards ? items?.cards :[]}
-              //   id={new Date().getMilliseconds()*index}
-              //   data={items.cards}
-              //   cardsName={items.title}
-              //   cardKey={items.id}
-              //   cardlistId={items.id}
-              //   cardId={workspace_id}
-              //   icon={icons.editIcon}
-              // />
-            );
-          })
-          //  {isDatas?.map((items, index) => {
-          //     console.log("items?????", items);
-
-          //     return (
-          //       <Cards
-          //         // data={items?.cards ? items?.cards :[]}
-          //         data={items.cards}
-          //         cardsName={items.title}
-          //         cardKey={items.id}
-          //         cardlistId={items.id}
-          //         cardId={workspace_id}
-          //         icon={icons.editIcon}
-          //       />
-          //     );
-          //   })
-
-          // : (
-          //   <div className="w-100 ">
-          //     <div className=" w-100 h-100  d-flex bg-white justify-content-center align-items-center">
-          //       Please Select your Board To Proceed..
-          //     </div>
-          //   </div>
-        }
-      </div>
+          return (
+            <div key={item.id}>
+              <h3>Title: {item.title}</h3>
+              <p>Position: {item.position}</p>
+              <p>Cards: {item.cards.length}</p>
+            </div>
+          );
+        })
+      ) : (
+        <div>No valid board data available</div>
+      )}
     </div>
   );
+  // return (
+  //   <div className="card-Parrent">
+  //     <div className="card1 d-flex justify-content-between">
+  //       {
+  //         isDatas?.map((items, index) => {
+  //           console.log("inside content?", items);
+
+  //           return (
+  //             <div>{index}</div>
+  //             // <Cards
+  //             //   // data={items?.cards ? items?.cards :[]}
+  //             //   id={new Date().getMilliseconds()*index}
+  //             //   data={items.cards}
+  //             //   cardsName={items.title}
+  //             //   cardKey={items.id}
+  //             //   cardlistId={items.id}
+  //             //   cardId={workspace_id}
+  //             //   icon={icons.editIcon}
+  //             // />
+  //           );
+  //         })
+  //         //  {isDatas?.map((items, index) => {
+  //         //     console.log("items?????", items);
+
+  //         //     return (
+  //         //       <Cards
+  //         //         // data={items?.cards ? items?.cards :[]}
+  //         //         data={items.cards}
+  //         //         cardsName={items.title}
+  //         //         cardKey={items.id}
+  //         //         cardlistId={items.id}
+  //         //         cardId={workspace_id}
+  //         //         icon={icons.editIcon}
+  //         //       />
+  //         //     );
+  //         //   })
+
+  //         // : (
+  //           // <div className="w-100 ">
+  //           //   <div className=" w-100 h-100  d-flex bg-white justify-content-center align-items-center">
+  //           //     Please Select your Board To Proceed..
+  //           //   </div>
+  //           // </div>
+  //       }
+  //     </div>
+  //   </div>
+  // );
 };

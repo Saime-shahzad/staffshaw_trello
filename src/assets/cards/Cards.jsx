@@ -23,8 +23,8 @@ export const Cards = ({
   cardKey,
   cardlistId,
 }) => {
-  console.log("data>>>>", data);
-  console.log("cardsName>>>>", cardsName);
+  console.log("card data >>>>", data);
+  console.log("cardsName >>>>", cardsName);
 
   // const [itemCardName, setIsCardName] = useState(cardsName);
   const [isAddList, setIsAddList] = useState(false);
