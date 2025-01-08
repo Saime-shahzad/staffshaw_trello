@@ -1,19 +1,13 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom'
-import { CardsSection } from '../../../components/cardsSection/CardsSection';
+import React from "react";
 
 export const AllBoards = () => {
-    const location=useLocation()
-    
+
+
   return (
-    <div className='boards-parent'>
-        <div className="">
-
-<CardsSection getBoardId={location.state} />
-</div>
-
-
-
+    <div className="boards-parent">
+      {/* <div className="">
+        <CardsSection getBoardId={location.state} />
+      </div> */}
     </div>
-  )
-}
+  );
+};

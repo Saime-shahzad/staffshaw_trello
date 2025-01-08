@@ -6,28 +6,38 @@ import "./Index.css";
 import icons from "../../assets/icons";
 import Popup from "../../assets/select/Popup";
 import { FilterComp } from "../../assets/others/Others";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { getBoardList } from "../../redux-store/bordCards/boardCardsSlice";
 
-import AppRoutes from "../../routes/index";
 import { Menu } from "antd";
 import { SettingOutlined } from "@ant-design/icons";
 import { getDashboardData } from "../../redux-store/globalSlice/globalSlice";
 import { CardsSection } from "../../components/cardsSection/CardsSection";
+import NewBoard from "../newboard/NewBoard";
+import { Users } from "../users/Users";
+import SignUp from "../signUp/SignUp";
+import SignIn from "../signIn/SignIn";
+import EditProfile from "../editProfile/EditProfile";
+import { useRoutFunction } from "../../assets/usefulFunctions/UseFullFunctions";
 
 // import {Inputs} from "../../assets/input/Inputs"
 // import DraggableComponent from "../../components/dragAndDrop/DraggableComponent";
 
 const { Content, Sider } = Layout;
 
+
 const Index = () => {
   const [collapsed, setCollapsed] = useState(false);
   // ya bhi baad ka liye roki ha state
   const [isBoardId, setIsBoardId] = useState(null);
   const [isBoardName, setIsBoardName] = useState({});
-  console.log("isBoardName>>>>", isBoardName);
 
   const [open, setOpen] = useState(false);
 
@@ -37,8 +47,8 @@ const Index = () => {
 
   const location = useLocation();
   const dispatch = useDispatch();
-  // const routeTo=useRoutFunction()
-  const navigate = useNavigate();
+  const routeTo=useRoutFunction()
+  
 
   const getBoardCardsNames = useSelector(
     (state) => state.boardCards?.boardCards
@@ -46,7 +56,6 @@ const Index = () => {
   const getAdminDashboardData = useSelector(
     (state) => state.globalData?.dashboardData
   );
-  
 
   const dynamicSideBarItems = [
     {
@@ -77,7 +86,7 @@ const Index = () => {
     dispatch(getBoardList());
   }, [dispatch, isBoardId]);
   useEffect(() => {
-    if (getAdminDashboardData && location.pathname === "/board") {
+    if (getAdminDashboardData ) {
       //  setIsIdLocalstorage( localStorage.getItem("b-id"))
       const clickedItem2 =
         getAdminDashboardData &&
@@ -86,7 +95,6 @@ const Index = () => {
             (item) => String(item.id) === localStorage.getItem("b-id")
           );
         });
-  console.log("clickedItem2>>>>", clickedItem2);
 
       //  const clickedItem =
       //  getBoardCardsNames &&
@@ -96,14 +104,12 @@ const Index = () => {
   }, [location.pathname, getAdminDashboardData]);
 
   const onMenueClick = async (e, id) => {
-   
     if (e.preventDefault) {
       e.preventDefault(); // Prevents any default behavior, if applicable
     }
 
     const clickedItemKey = id ? String(id) : e.key;
 
-    
     const clickedItem2 =
       getAdminDashboardData &&
       getAdminDashboardData.flatMap((item) => {
@@ -115,7 +121,7 @@ const Index = () => {
     if (clickedItem2[0]) {
       setIsBoardId(clickedItem2[0].id);
       localStorage.setItem("b-id", clickedItem2[0].id);
-      navigate("/board", { state: clickedItem2[0].id });
+      routeTo("/");
       setIsBoardName(clickedItem2[0] && clickedItem2[0]);
     }
 
@@ -233,7 +239,7 @@ const Index = () => {
           <div className="headesss d-flex justify-content-between">
             <div className="fs-6 fw-bolder ">
               <span className="p-2 styleButton">
-                {location.pathname === "/board"
+                {location.pathname === "/"
                   ? isBoardName?.title
                   : "Select Bord"}
               </span>
@@ -305,11 +311,26 @@ const Index = () => {
               backgroundSize: "cover",
             }}
           >
-            {/* <Routes>
-              <Route path="/" element={<CardsSection />} />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <CardsSection
+                    workspace_id={isBoardName?.workspace_id}
+                    dataArray1={isBoardName}
+                    // list={dummyDataV1} 
+                    list={isBoardName?.lists}
+                  />
+                }
+              />
               <Route path="/add-board" element={<NewBoard />} />
-            </Routes> */}
-            <AppRoutes />
+              <Route path="/users" element={<Users />} />
+              <Route path="/sign-up" element={<SignUp />} />
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/profile" element={<EditProfile />} />
+              {/* <Route path="/board" element={<AllBoards />} /> */}
+            </Routes>
+            {/* <AppRoutes /> */}
 
             {/* <CardsSection />
             <NewBoard /> */}
@@ -317,8 +338,15 @@ const Index = () => {
           </div>
         </Content>
         <div className="d-none">
-
-        {isBoardName ? <CardsSection workspace_id={isBoardName?.workspace_id} dataArray1={isBoardName } /> : ""}
+          {/* {isBoardName ? (
+          <CardsSection
+            workspace_id={isBoardName?.workspace_id}
+            dataArray1={isBoardName}
+            list={dummyDataV1}
+          />
+          ) : (
+            ""
+          )} */}
         </div>
       </Layout>
     </Layout>

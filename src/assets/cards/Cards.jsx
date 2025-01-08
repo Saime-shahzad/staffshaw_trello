@@ -1,5 +1,4 @@
 import React, {
-  useEffect,
   // useEffect,
   useRef,
   useState,
@@ -22,14 +21,13 @@ export const Cards = ({
   boardId,
   cardKey,
   cardlistId,
+  id,
 }) => {
-  console.log("data>>>>", data);
-  console.log("cardsName>>>>", cardsName);
+
 
   // const [itemCardName, setIsCardName] = useState(cardsName);
   const [isAddList, setIsAddList] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDatas, setIsDatas] = useState([]);
   const inputValue = useRef(null);
   const dispatch = useDispatch();
 
@@ -140,19 +138,14 @@ export const Cards = ({
     // }
     // console.log("items>>>", inputValue?.current?.resizableTextArea?.textArea?.id);
   };
-  console.log("cardsName>>>>ddd", cardsName);
 
-  // useEffect(() => {
-  //   setIsDatas(data);
-  //   console.log("ok");
-  // }, [data]);
 
   return (
-    <div className="card-parent">
-      {cardsName}
-      {/* <Card
+    <div className="card-parent d-flex flex-column">
+      <Card
         key={cardKey}
         title={cardsName}
+        id={id}
         // title={items.title ? items.title :""}
         bordered={false}
         style={{ width: 300, backgroundColor: "#F1F2F4" }}
@@ -160,10 +153,15 @@ export const Cards = ({
         onDrop={drop}
         onDragOver={allowDrop}
       >
-        {cardsName === "Add New List"
-          ? " "
-          : data?.map((item, index) => (
-              <div
+        {cardsName === "Add New List" ? (
+          " "
+        ) : (data ? (
+          data?.map((item, index) => 
+            
+            {
+              console.log("item>>>>" , item);
+              return (
+                <div
                 key={index}
                 className="parent d-flex justify-content-between bg-white hoverControl rounded-2 m-1 p-2"
                 id={`dragtarget-${index}-${cardsName}`}
@@ -188,7 +186,13 @@ export const Cards = ({
                 )}
                 <div>{icon}</div>
               </div>
-            ))}
+              )
+            }
+           
+          )
+        ) : (
+          <div>"No Cards in this List "</div>
+        ))}
 
         {isAddList ? (
           <div className="textArea-Parent w-100 p-1 border-dark-subtle">
@@ -231,7 +235,7 @@ export const Cards = ({
             <div>{icon}</div>
           </div>
         )}
-      </Card> */}
+      </Card>
     </div>
   );
 };
