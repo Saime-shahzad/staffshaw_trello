@@ -27,7 +27,7 @@ const Index = () => {
   // ya bhi baad ka liye roki ha state
   const [isBoardId, setIsBoardId] = useState(null);
   const [isBoardName, setIsBoardName] = useState({});
-  console.log("isBoardName>>>>", isBoardName);
+  console.log("isBoardName>>>>", isBoardName);  
 
   const [open, setOpen] = useState(false);
 
@@ -318,7 +318,7 @@ const Index = () => {
         </Content>
         <div className="d-none">
 
-        {isBoardName ? <CardsSection workspace_id={isBoardName?.workspace_id} dataArray1={isBoardName } /> : ""}
+        {isBoardName && isBoardName ? <CardsSection workspace_id={isBoardName?.workspace_id} dataArray1={isBoardName } /> : ""}
         </div>
       </Layout>
     </Layout>

@@ -10,7 +10,6 @@ export const CardsSection = ({ getBoardId, dataArray1, workspace_id }) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [isDatas, setIsDatas] = useState([]);
-  const [isRefresh, setIsRefresh] = useState(null);
   const pageLocation = location.pathname === "/";
 
   // const getBoardCardsNames = useSelector(
@@ -21,7 +20,7 @@ export const CardsSection = ({ getBoardId, dataArray1, workspace_id }) => {
   // );
   // console.log("getListsNameAgainstCards>>>>", getListsNameAgainstCards);
 
-  console.log("dataArray1 top pr>>>>", dataArray1);
+  console.log("workspace_id>>>>", workspace_id);
 
   const addListOption = [
     {
@@ -33,22 +32,25 @@ export const CardsSection = ({ getBoardId, dataArray1, workspace_id }) => {
   useEffect(() => {
     if (dataArray1?.lists) {
       const updatedListOfCardNames = [
-        ...(Array.isArray(dataArray1.lists) ? dataArray1?.lists : []),
+        ...(Array.isArray(dataArray1?.lists) ? dataArray1?.lists : []),
         ...addListOption,
       ];
-      setIsDatas(
-        updatedListOfCardNames.length > 1 ? updatedListOfCardNames : []
-      );
+  console.log("updatedListOfCardNames>>>>", updatedListOfCardNames);
+
+      if(updatedListOfCardNames.length > 1){
+
+        setIsDatas(
+           updatedListOfCardNames
+        );
+      }
     }
   }, [dataArray1]);
+
+  
   console.log("dataArray1>>>>", dataArray1);
   console.log("isDatas>>>>", isDatas);
 
-  useEffect(() => {
-    if (isDatas.length) {
-      setIsRefresh((prev) => !prev);
-    }
-  }, [isDatas, dataArray1]);
+
 
   // const updatedListOfCardNames = [
   //   ...(Array.isArray(getListsNameAgainstCards)
@@ -103,42 +105,31 @@ export const CardsSection = ({ getBoardId, dataArray1, workspace_id }) => {
 
   return (
     <div className="card-Parrent">
-      {[1 , 2 , 3].map((item) => {
-        return(
-          <div>
-            {item}
-          </div>
-        )
-      })}
-      {isDatas?.map((item) => {
-        return(
-          <div>
-            {item.id}
-          </div>
-        )
-      })}
+      
       <div className="card1 d-flex justify-content-between">
         {
           isDatas?.map((items, index) => {
-            console.log("inside content?", items);
-            
+            console.log("items?????", items);
 
             return (
-              <div>
-                {index}
-              </div>
-              // <Cards
-              //   // data={items?.cards ? items?.cards :[]}
-              //   id={new Date().getMilliseconds()*index}
-              //   data={items.cards}
-              //   cardsName={items.title}
-              //   cardKey={items.id}
-              //   cardlistId={items.id}
-              //   cardId={workspace_id}
-              //   icon={icons.editIcon}
-              // />
+              <>
+              
+              {/* {items}  */}
+              <Cards
+                // data={items?.cards ? items?.cards :[]}
+                id={new Date().getMilliseconds()*index}
+                data={items.cards}
+                cardsName={items.title}
+                cardKey={items.id}
+                cardlistId={items.id}
+                icon={icons.editIcon}
+              />
+              </>
             );
           })
+
+
+          
           //  {isDatas?.map((items, index) => {
           //     console.log("items?????", items);
 

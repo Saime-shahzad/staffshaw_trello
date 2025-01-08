@@ -22,6 +22,7 @@ export const Cards = ({
   boardId,
   cardKey,
   cardlistId,
+  id
 }) => {
   console.log("data>>>>", data);
   console.log("cardsName>>>>", cardsName);
@@ -29,7 +30,6 @@ export const Cards = ({
   // const [itemCardName, setIsCardName] = useState(cardsName);
   const [isAddList, setIsAddList] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDatas, setIsDatas] = useState([]);
   const inputValue = useRef(null);
   const dispatch = useDispatch();
 
@@ -140,26 +140,21 @@ export const Cards = ({
     // }
     // console.log("items>>>", inputValue?.current?.resizableTextArea?.textArea?.id);
   };
-  console.log("cardsName>>>>ddd", cardsName);
 
-  // useEffect(() => {
-  //   setIsDatas(data);
-  //   console.log("ok");
-  // }, [data]);
 
   return (
-    <div className="card-parent">
-      {cardsName}
-      {/* <Card
+    <div className="card-parent d-flex flex-column">
+      <Card
         key={cardKey}
         title={cardsName}
+        id={id}
         // title={items.title ? items.title :""}
         bordered={false}
         style={{ width: 300, backgroundColor: "#F1F2F4" }}
         className="droptarget"
         onDrop={drop}
         onDragOver={allowDrop}
-      >
+      > 
         {cardsName === "Add New List"
           ? " "
           : data?.map((item, index) => (
@@ -231,7 +226,7 @@ export const Cards = ({
             <div>{icon}</div>
           </div>
         )}
-      </Card> */}
+      </Card>
     </div>
   );
 };
