@@ -5,8 +5,11 @@ import { userRequest } from "../apiRouts/apiRouts";
 export const addBoard = createAsyncThunk(
   "board/addBoard",
   async (userData, { rejectWithValue }) => {
+    console.log("userData>>>>" , userData);
+    
     try {
-      const response = await userRequest.post("/board", userData);
+      const response = await userRequest.post(`admin/boards/create-board/${userData.workspace_name}`, userData);
+      // const response = await userRequest.post("/board", userData);
 
       // const response = await userRequest.post("/login", userData);
       return response.data;
