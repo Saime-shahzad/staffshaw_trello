@@ -305,7 +305,7 @@ const Index = () => {
             style={{
               padding: 24,
               minHeight: "100vh", // Full viewport height
-              width: location.pathname === "/bord" ? "100%" : "100%",
+              width: location.pathname === "/" ? "100%" : "100%",
               overflow: "scroll",
               // background: colors.theme,
               backgroundSize: "cover",
