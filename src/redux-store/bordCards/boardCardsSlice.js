@@ -19,8 +19,10 @@ export const addBoardCards = createAsyncThunk(
 export const getBoardList = createAsyncThunk(
   "boardCards/getBoardList",
   async (userData, { rejectWithValue }) => {
+    
     try {
-      const response = await userRequest.get("/admin/boards/2");
+      const response = await userRequest.get(`/admin/boards/${userData}`);
+      
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
