@@ -10,13 +10,11 @@ const addListOption = [
   },
 ];
 
-export const CardsSection = ({ dataArray1, workspace_id }) => {
+export const CardsSection = ({ dataArray1, workspace_id , boardId }) => {
   const [boardData, setBoardData] = useState([]);
 
   const prevBoardData = useRef();
 
-  // console.log("boardData >>>", boardData);
-  // console.log("isDatas >>>", isDatas);
 
   useEffect(() => {
     if (dataArray1?.lists) {
@@ -60,6 +58,7 @@ export const CardsSection = ({ dataArray1, workspace_id }) => {
       <div className="card1 d-flex justify-content-between">
         {boardData ? (
           boardData?.map((items, index) => {
+            
             return (
               <Cards
                 // data={items?.cards ? items?.cards :[]}
@@ -70,6 +69,7 @@ export const CardsSection = ({ dataArray1, workspace_id }) => {
                 cardlistId={items.id}
                 cardId={workspace_id}
                 icon={icons.editIcon}
+                boardId={boardId}
               />
             );
           })
