@@ -41,12 +41,32 @@ export const getDashboardData = createAsyncThunk(
     }
   }
 );
+export const getWorkspaces = createAsyncThunk(
+  "global/getWorkspaces",
+  async (dashboardData, { rejectWithValue }) => {
+    try {
+      // Simulate API call (replace this with actual API logic)
+      const response = await userRequest.get("admin/workspaces", dashboardData);
+      return response.data;
+
+      // For now, return the data directly
+    } catch (error) {
+      console.log("Error in addGlobalData:", error);
+
+      // Ensure meaningful error data is passed to the reducer
+      return rejectWithValue(
+        error.response?.data || error.message || "An unknown error occurred"
+      );
+    }
+  }
+);
 
 const globalSlice = createSlice({
   name: "global",
   initialState: {
     addglobal: [],
     dashboardData: [],
+    workspaceData: [],
     lastClickedItem: null, // Add this for storing the last clicked item
     loading: false,
     error: null,
@@ -77,6 +97,20 @@ const globalSlice = createSlice({
       state.dashboardData = action.payload.data.workspaces; // Store the last clicked item
     });
     builder.addCase(getDashboardData.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    /// get WorkSpaces//
+    builder.addCase(getWorkspaces.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(getWorkspaces.fulfilled, (state, action) => {
+      
+      state.loading = false;
+      state.workspaceData = action.payload.workspaces; // Store the last clicked item
+    });
+    builder.addCase(getWorkspaces.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
