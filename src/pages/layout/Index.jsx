@@ -6,12 +6,7 @@ import "./Index.css";
 import icons from "../../assets/icons";
 import Popup from "../../assets/select/Popup";
 import { FilterComp } from "../../assets/others/Others";
-import {
-  Link,
-  Route,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { getBoardList } from "../../redux-store/bordCards/boardCardsSlice";
@@ -32,7 +27,6 @@ import { useRoutFunction } from "../../assets/usefulFunctions/UseFullFunctions";
 
 const { Content, Sider } = Layout;
 
-
 const Index = () => {
   const [collapsed, setCollapsed] = useState(false);
   // ya bhi baad ka liye roki ha state
@@ -47,8 +41,7 @@ const Index = () => {
 
   const location = useLocation();
   const dispatch = useDispatch();
-  const routeTo=useRoutFunction()
-  
+  const routeTo = useRoutFunction();
 
   const getBoardCardsNames = useSelector(
     (state) => state.boardCards?.boardCards
@@ -60,7 +53,7 @@ const Index = () => {
   const dynamicSideBarItems = [
     {
       id: "1",
-      title: "Add Your WorkSpace",
+      title: "Add Boards",
       link: "/add-board",
       icons: icons.appStoreOutlined,
     },
@@ -83,10 +76,9 @@ const Index = () => {
 
   useEffect(() => {
     dispatch(getDashboardData());
-    dispatch(getBoardList());
   }, [dispatch, isBoardId]);
   useEffect(() => {
-    if (getAdminDashboardData ) {
+    if (getAdminDashboardData) {
       //  setIsIdLocalstorage( localStorage.getItem("b-id"))
       const clickedItem2 =
         getAdminDashboardData &&
@@ -117,12 +109,13 @@ const Index = () => {
           (list) => String(list.id) === clickedItemKey
         );
       });
-
+   
     if (clickedItem2[0]) {
       setIsBoardId(clickedItem2[0].id);
       localStorage.setItem("b-id", clickedItem2[0].id);
       routeTo("/");
       setIsBoardName(clickedItem2[0] && clickedItem2[0]);
+      dispatch(getBoardList(String(clickedItem2[0]?.workspace_id)));
     }
 
     // else {
@@ -158,7 +151,7 @@ const Index = () => {
         <div className="sidebar-options  ">
           {!collapsed ? (
             <div className="parrent">
-              <div className="menueClass d-flex ">
+              <div className="menueClass d-flex px-2">
                 <div class="BVceZHOoUszsgw r6KV0yEdmnh3Op">S</div>
 
                 <div className=" text-white text-class  my-1 px-2 d-flex ">
@@ -198,12 +191,12 @@ const Index = () => {
                           className="addworkSpace-parrent border-0 mt-1  "
                           style={{ cursor: "pointer" }}
                         >
-                          <div className=" d-flex ">
+                          <div className=" d-flex px-4 ">
                             <div
                               className="m-1 my-2  text-white  "
                               // onClick={(value) => setCollapsed(value)}
                             >
-                              {item.icon}
+                              {item.icons}
                             </div>
                             <div className=" text-white align-items-center  my-1 px-2 d-flex ">
                               {item.title}
@@ -239,9 +232,7 @@ const Index = () => {
           <div className="headesss d-flex justify-content-between">
             <div className="fs-6 fw-bolder ">
               <span className="p-2 styleButton">
-                {location.pathname === "/"
-                  ? isBoardName?.title
-                  : "Select Bord"}
+                {location.pathname === "/" ? isBoardName?.title : "Select Bord"}
               </span>
               <span className=" mx-1 p-2 text-white styleButton">
                 {icons.starIcon}
@@ -318,7 +309,7 @@ const Index = () => {
                   <CardsSection
                     workspace_id={isBoardName?.workspace_id}
                     dataArray1={isBoardName}
-                    // list={dummyDataV1} 
+                    boardId={localStorage.getItem("b-id")}
                     list={isBoardName?.lists}
                   />
                 }
