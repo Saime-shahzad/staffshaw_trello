@@ -4,7 +4,7 @@ import Loader from "../loader/Loader";
 import icons from "../icons";
 import CheckBox from "../checkbox/CheckBox";
 
-export const Others = ({ items, icon = false }) => {
+export const Others = ({ items, onClick,icon = false }) => {
     const [isOpenPop , setIsOpenPop]=useState(false)
 
 
@@ -41,7 +41,10 @@ const handleTampletPopup= (()=>{
         )}
 
         <div className="projectName fw-bold p-1 pt-2 w-100">
+          <span onClick={onClick}>
+
           {items}
+          </span>
           <span
             className="d-block fw-light"
             style={{ fontSize: "12px", lineHeight: "2px" }}
