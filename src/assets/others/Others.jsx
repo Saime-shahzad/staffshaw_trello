@@ -143,7 +143,7 @@ return(
 )
 
 }
-export const ModalPopups = ({  data   }) => {
+export const ModalPopups = ({  data  , onClick }) => {
 
     
 
@@ -153,11 +153,11 @@ return(
       {data?.map((items) => {
         return(
 
-        <div className="modalpopups-Parrent d-flex p-1 hoverControl" >
-          <div className="id-or-labelNames  " >{items.userId? items.userId:items.lableName}</div>
+        <div className="modalpopups-Parrent d-flex p-1 hoverControl"  >
+          <div className="id-or-labelNames  " >{items.id? items.id:items.lableName}</div>
           :
-          <div className="popupdata-Parrent w-100 mx-1" style={{backgroundColor:items.lables ? items.lables :""}}>
-          {items.userName? items.userName:items.lables}
+          <div className="popupdata-Parrent w-100 mx-1" value= {items.full_name? items.full_name:items.lables} onClick={onClick} style={{backgroundColor:items.lables ? items.lables :""}}>
+          {items.full_name? items.full_name:items.lables}
           </div>
         </div>
         )
