@@ -1,4 +1,5 @@
 import React, {
+  useEffect,
   // useEffect,
   useRef,
   useState,
@@ -21,6 +22,7 @@ export const Cards = ({
   boardId,
   cardKey,
   cardlistId,
+  cardId,
   id,
 }) => {
 
@@ -28,6 +30,9 @@ export const Cards = ({
   // const [itemCardName, setIsCardName] = useState(cardsName);
   const [isAddList, setIsAddList] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+
   const inputValue = useRef(null);
   const dispatch = useDispatch();
 
@@ -99,6 +104,12 @@ export const Cards = ({
   const handleAddList = (e) => {
     setIsAddList(e);
   };
+  useEffect(() => {
+   console.log("ok>>>");
+   
+  }, [refresh , dispatch])
+  
+  
 
   const handleAddCard = async (e) => {
     e.preventDefault();
@@ -116,8 +127,11 @@ export const Cards = ({
       };
       // await dispatch(addList({title : description}))
       const response = await dispatch(addList(finalobj));
+      
+
       if (response) {
         toast.success("List Added Successfully");
+
       }
     } else {
       const taskDescription =
@@ -126,10 +140,14 @@ export const Cards = ({
         title: taskDescription,
         cardId: inputValue?.current?.resizableTextArea?.textArea?.id,
       };
-      const response = dispatch(addTask(finalobj));
-      console.log("response>>>>", response);
-      if (response === 200) {
+      const response =await dispatch(addTask(finalobj));
+      if (response?.payload.status === 200) {
         toast.success("Task Added Successfully");
+        setTimeout(() => {
+          setRefresh((prev) => !prev);
+
+        }, 2000);
+        
       }
     }
     // const newItem = inputValue?.current?.resizableTextArea?.textArea?.value;
@@ -141,7 +159,7 @@ export const Cards = ({
 
 
   return (
-    <div className="card-parent d-flex flex-column">
+    <div className="card-parent d-flex flex-column px-3">
       <Card
         key={cardKey}
         title={cardsName}
@@ -181,6 +199,8 @@ export const Cards = ({
                   <Modals
                     isModalOpen={isModalOpen}
                     setIsModalOpen={setIsModalOpen}
+                    content={item}
+                    cardName={cardsName}
                   />
                 )}
                 <div>{icon}</div>
