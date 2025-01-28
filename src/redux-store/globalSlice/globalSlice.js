@@ -26,9 +26,20 @@ export const getDashboardData = createAsyncThunk(
   "global/getDashboardData",
   async (dashboardData, { rejectWithValue }) => {
     try {
+      if(dashboardData){
+        
+        
+        const response = await userRequest.get("user/dashboard");
+      
+        
+        return response.data;
+      }
+      else{
+
+        const response = await userRequest.get("admin/dashboard", dashboardData);
+        return response.data;
+      }
       // Simulate API call (replace this with actual API logic)
-      const response = await userRequest.get("admin/dashboard", dashboardData);
-      return response.data;
 
       // For now, return the data directly
     } catch (error) {
