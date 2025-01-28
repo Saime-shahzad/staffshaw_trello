@@ -1,16 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Forms from '../../assets/forms/Forms'
 
 import "./EditProfile.css"
 import { useDispatch } from 'react-redux'
 import {registerUser } from '../../redux-store/auth/authSlice'
 import { toast } from 'react-toastify'
+import { getUsers } from '../../redux-store/users/userSlice'
+import { useSelector } from 'react-redux'
 // import { useEffect } from 'react'
 // import { getUserDetails } from '../../redux-store/users/userSlice'
 
 const EditProfile = () => {
     const dispatch=useDispatch()
-    const [ isLoading,setIsLoading] = useState(false)
+    const [ isLoading,setIsLoading] = useState(false)  
+     const getusersData = useSelector(
+      (state) => state.user?.user
+    );
+    console.log("getusersData>>>", getusersData);
     // const getUserProfileDetails = useSelector(
     //   (state) => state.user?.userProfileData
     // );
@@ -127,6 +133,19 @@ const EditProfile = () => {
     const onFinishFailed = (errorInfo) => {
       console.log('Failed:', errorInfo);
     };
+
+    useEffect(() => {
+     if(localStorage.getItem("role")?.includes("user")){
+      const userData="user"
+            dispatch(getUsers(userData));
+            
+          }
+          else{
+       dispatch(getUsers());
+
+     }
+    }, [dispatch])
+    
   return (
     <div className='parent' >
 <div className='child-1 forms-control vh-100 d-flex w-100 justify-content-center align-items-center'> 
