@@ -29,6 +29,19 @@ export const getUsers = createAsyncThunk(
     }
   }
 );
+export const approveUser = createAsyncThunk(
+  "user/approveUser",
+  async (userData, { rejectWithValue }) => {
+    
+    try {
+      const response = await userRequest.post("admin/update-wrokspace-request", userData);
+      
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 export const getUserDetails = createAsyncThunk(
   "user/getUserdetail",
   async (userData, { rejectWithValue }) => {
@@ -62,6 +75,21 @@ const userSlice = createSlice({
       state.user = action.payload.user;
     });
     builder.addCase(addUsers.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+
+    ////Approve Users
+    builder.addCase(approveUser.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(approveUser.fulfilled, (state, action) => {
+      
+      state.loading = false;  
+      // state.user = action.payload.user;
+    });
+    builder.addCase(approveUser.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
