@@ -6,11 +6,11 @@ import "./SignIn.css";
 import { toast } from "react-toastify";
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../../redux-store/auth/authSlice'
-// import { useRoutFunction } from "../../assets/usefulFunctions/UseFullFunctions";
+import { useRoutFunction } from "../../assets/usefulFunctions/UseFullFunctions";
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
-  // const routeTo=useRoutFunction()
+  const routeTo=useRoutFunction()
 
 
   const dispatch=useDispatch()
@@ -37,10 +37,10 @@ const SignIn = () => {
  
   const onFinish = (async(values) => {
     
+    setIsLoading(true)
     const res = await dispatch(loginUser(values));
     console.log('res:', res);
     
-    setIsLoading(true)
     
     
     if(res.error){
@@ -59,9 +59,11 @@ const SignIn = () => {
         localStorage.setItem("token" , res.payload?.data.token)
       toast.success("Successfully Login");
       setIsLoading(false)
-      window.location.assign("/");
-      // routeTo("/")
-    }, 3000);
+      // window.location.assign("/");
+      routeTo("/" , res.payload?.data.roles )
+      localStorage.setItem("role" , res.payload?.data.roles )
+      window.location.reload()
+    }, 2000);
 
   }
 });
