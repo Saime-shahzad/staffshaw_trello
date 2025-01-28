@@ -42,6 +42,7 @@ const Index = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const routeTo = useRoutFunction();
+  
 
   const getBoardCardsNames = useSelector(
     (state) => state.boardCards?.boardCards
@@ -49,51 +50,70 @@ const Index = () => {
   const getAdminDashboardData = useSelector(
     (state) => state.globalData?.dashboardData
   );
+  
 
   const dynamicSideBarItems = [
-    {
+   (!localStorage.getItem("role")?.includes("user") && {
       id: "1",
       title: "Add Boards",
       link: "/add-board",
       icons: icons.appStoreOutlined,
-    },
-    {
+    }),
+    (!localStorage.getItem("role")?.includes("user") && {
       id: "2",
       title: "Users",
       link: "/users",
       icons: icons.peopleGroupIcon,
-    },
-    ...getAdminDashboardData.map((item) => ({
-      key: "sub1",
-      label: item.name,
-      icon: <SettingOutlined />,
-      children: item.boards?.map((item) => ({
-        key: item.id,
-        label: item.title,
-      })),
-    })),
+    }),
+    ...(Array.isArray(getAdminDashboardData) && getAdminDashboardData.length > 0
+      ? getAdminDashboardData.map((item) => ({
+          key: "sub1",
+          label: item.name,
+          icon: <SettingOutlined />,
+          children: item.boards?.map((board) => ({
+            key: board.id,
+            label: board.title,
+          })),
+        }))
+      : [
+          {
+            key: "no-workspace",
+            label: "No Workspace",
+            icon: <SettingOutlined />,
+          },
+        ]),
   ];
+  
 
   useEffect(() => {
-    dispatch(getDashboardData());
-  }, [dispatch, isBoardId]);
-  useEffect(() => {
-    if (getAdminDashboardData) {
-      //  setIsIdLocalstorage( localStorage.getItem("b-id"))
-      const clickedItem2 =
-        getAdminDashboardData &&
-        getAdminDashboardData.flatMap((item) => {
-          return item.boards?.filter(
-            (item) => String(item.id) === localStorage.getItem("b-id")
-          );
-        });
+    // if(location.state[0] === "team_member" || location.state[0] === "user" ){
+    if(localStorage.getItem("role")?.includes("user") ){
+      
+const userData=localStorage.getItem("role")?.includes("user")
+      dispatch(getDashboardData(userData));
+      
+    }
+    else{
+      dispatch(getDashboardData());
 
-      //  const clickedItem =
-      //  getBoardCardsNames &&
-      //  getBoardCardsNames.find((item) => String(item.id) === localStorage.getItem("b-id"));
-      setIsBoardName(clickedItem2[0]);
+    }
+  }, [dispatch, isBoardId , location.state]);
+  useEffect(() => {
+    if (Array.isArray(getAdminDashboardData) && getAdminDashboardData.length > 0) {
+      const clickedItem2 = getAdminDashboardData
+        .flatMap((item) =>
+          item.boards?.filter(
+            (board) => String(board.id) === localStorage.getItem("b-id")
+          )
+        )
+        .filter(Boolean); // Removes undefined/null values if any
+  
+      setIsBoardName(clickedItem2[0]); // Sets the first matching board
+    } else {
+      setIsBoardName(null); // Handle the "No workspaces" case
     }
   }, [location.pathname, getAdminDashboardData]);
+  
 
   const onMenueClick = async (e, id) => {
     if (e.preventDefault) {
@@ -118,20 +138,7 @@ const Index = () => {
       dispatch(getBoardList(String(clickedItem2[0]?.workspace_id)));
     }
 
-    // else {
-
-    //   setTimeout(() => {
-    //     const clickedItem =
-    //     getBoardCardsNames &&
-    //     getBoardCardsNames.find((item) => String(item.id) === clickedItemKey);
-    //     console.log("clickedItem>>>", clickedItem);
-
-    //     if (clickedItem) {
-    //       setIsBoardId(clickedItem.id);
-    //       navigate("/", { state: clickedItem.id });
-    //     }
-    //   }, 100); // Ensure routing is complete
-    // }
+    
   };
 
   return (
@@ -141,6 +148,8 @@ const Index = () => {
         backgroundColor: colors.theme,
       }}
     >
+      {(Array.isArray(getAdminDashboardData) && getAdminDashboardData.length > 0) ? 
+      <>
       <Sider
         width={!collapsed ? "250" : "20"}
         collapsed={collapsed}
@@ -340,6 +349,13 @@ const Index = () => {
           )} */}
         </div>
       </Layout>
+      </>
+    :
+    <div className="backgroundforNoWorkSpace vh-100 d-flex align-items-center justify-content-center">
+          Your Request is Still in pending Please Wait for the Approval
+        </div>
+    
+    }
     </Layout>
   );
 };
