@@ -153,13 +153,28 @@ return(
       {data?.map((items) => {
         return(
 
-        <div className="modalpopups-Parrent d-flex p-1 hoverControl"  >
-          <div className="id-or-labelNames  " >{items.id? items.id:items.lableName}</div>
+          <div
+          className="modalpopups-Parrent d-flex p-1 "
+        >
+          <div className="id-or-labelNames">
+            {items.id ? items.id : items.lableName}
+          </div>
           :
-          <div className="popupdata-Parrent w-100 mx-1" value= {items.full_name? items.full_name:items.lables} onClick={onClick} style={{backgroundColor:items.lables ? items.lables :""}}>
-          {items.full_name? items.full_name:items.lables}
+          <div
+            className="popupdata-Parrent w-100 mx-1"
+            // Pass `items` explicitly
+            style={{ backgroundColor: items.lables ? items.lables : "" }}
+          >
+            {items.full_name ? (
+              <div className="d-flex" >
+                <CheckBox  onChange={() => onClick(items)} />{items.full_name}
+              </div>
+            ) : (
+              items.lables
+            )}
           </div>
         </div>
+        
         )
       })}
 
