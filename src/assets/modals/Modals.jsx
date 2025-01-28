@@ -59,7 +59,7 @@ const Modals = ({
     else if(getValue2 && selectedUsers?.length){
       toast.success("thank")
 
-      /// kal say ma yahin say kaam start kronga///
+      /// kal say ma yahin say kaam start kronga
     }
     else {
       toast.error(<div> &nbsp; empty fields </div>);
@@ -82,12 +82,24 @@ const Modals = ({
       lables: colors.labelColor3,
     },
   ];
-  const getSelectedValue = (e) => {
-    setSelectedUsers((prevSelectedUsers) => [
-      ...prevSelectedUsers,
-      e.target.getAttribute("value"),
-    ]);
+  const getSelectedValue = (item) => {
+    console.log("Clicked item:", item);
+    setSelectedUsers((prevSelectedUsers) => {
+      if (!prevSelectedUsers.includes(item?.full_name)) {
+        return [...prevSelectedUsers, item?.full_name];
+      }
+      return prevSelectedUsers;
+    });
+    // Perform your desired logic here
   };
+  // const getSelectedValue = (e) => {
+  //   console.log("e.target.getAttribute" , e.target.getAttribute("value"));
+  //   setSelectedUsers((prevSelectedUsers) => [
+  //     ...prevSelectedUsers,
+  //     e.target.getAttribute("value"),
+  //   ]);
+  // };
+  
   const modalTabs = [
     {
       tabName: "Members",
@@ -99,11 +111,11 @@ const Modals = ({
       tabIcons: icons.labelIcons,
       component: <ModalPopups onClick={getSelectedValue} data={labelData} />,
     },
-    {
-      tabName: "Attachments",
-      tabIcons: icons.fileUploadIcons,
-      component: <ImageDragDrop />,
-    },
+      // {
+      //   tabName: "Attachments",
+      //   tabIcons: icons.fileUploadIcons,
+      //   component: <ImageDragDrop />,
+      // },
   ];
 //   const handleRemoveName=((e)=>{
 // console.log("e>>>", e.target.getAttribute("value"));
@@ -169,7 +181,6 @@ const Modals = ({
                           <div className="tab-Parrent d-flex   ">
                             <div
                               className="notificationParrent  fs-5"
-                              style={{ cursor: "pointer" }}
                             >
                               {/* <Others items="Notification" icon={icons.notificationIcon}   /> */}
                               <Popup
@@ -198,7 +209,7 @@ const Modals = ({
                             {icons.popupclose}
                             </sup> */}
                             <span className=" rounded-circle bg-info mx-1 p-1" style={{ cursor:"pointer"}}>
-                            {item.split("")[0]} </span> {item}
+                            {item?.split("")[0]} </span> {item}
                           </div>
                         )
                       })}
