@@ -99,11 +99,7 @@ const SignUp = () => {
           label: item.title,
         })) 
         
-        // options:[
-        //     { value: '1', label: 'sales' },
-        //     { value: '2', label: 'production' },
-            
-        //   ]
+      
 
 
       },
