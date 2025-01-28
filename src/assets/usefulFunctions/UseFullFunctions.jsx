@@ -5,9 +5,14 @@ import { useNavigate } from "react-router-dom";
      
     const navigate = useNavigate();
 
-    const RoutFunction = (route) => {
-        if (route) {
+    const RoutFunction = (route , data) => {
+        
+        if (route && data) {
+            navigate(route  , { state: data && data });
+        }
+        else{
             navigate(route);
+
         }
     };
 
