@@ -28,13 +28,17 @@ export const Header = () => {
   const getAdminDashboardData = useSelector(
     (state) => state.globalData?.dashboardData
   );
+  console.log("getAdminDashboardData>>" , getAdminDashboardData);
 
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
   };
 
   useEffect(() => {
-    dispatch(getWorkspaces());
+    if(!localStorage.getItem("role")?.includes("user")){
+
+      dispatch(getWorkspaces());
+    }
     dispatch(getDashboardData());
   }, [dispatch, isBoardName]);
 
@@ -118,7 +122,7 @@ export const Header = () => {
       style={{ background: colors.theme }}
     >
       <div className="d-flex  p-2">
-        {headerItems?.map((item, index) => {
+        {(Array.isArray(getAdminDashboardData) && getAdminDashboardData.length > 0) && headerItems?.map((item, index) => {
           return (
             <div className="header-ItemsParrent px-2 d-flex fw-bold ">
               {item.title === "CRM" ? (
@@ -150,7 +154,10 @@ export const Header = () => {
           );
         })}
       </div>
+      
       <div className="search-Section p-2 d-flex">
+      {(Array.isArray(getAdminDashboardData) && getAdminDashboardData.length > 0) ?
+      <>
         <div className="searchDiv">
           <Input
             placeholder="Search Your Projects"
@@ -161,7 +168,7 @@ export const Header = () => {
           />
         </div>
         <div
-          className="notificationParrent mx-3 fs-5"
+          className="notificationParrent  mx-3 fs-5"
           style={{ cursor: "pointer" }}
         >
           {/* <Others items="Notification" icon={icons.notificationIcon}   /> */}
@@ -174,6 +181,12 @@ export const Header = () => {
 
           {/* {icons.notificationIcon} */}
         </div>
+        </>
+        :
+        ""
+        
+        
+        }
         {/* open if needed */}
         {/* <div className="notificationParrent mx-1 fs-5 ">
           {icons.questionMarkIcon}
@@ -247,6 +260,7 @@ export const Header = () => {
           </Popover>
         </div>
       </div>
+      
 
       {/* for the ardSecction/// */}
 
