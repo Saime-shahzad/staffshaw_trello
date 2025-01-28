@@ -18,6 +18,7 @@ import {
     TagsOutlined,
     PaperClipOutlined,
     AppstoreAddOutlined,
+    CheckSquareOutlined,
     UnlockOutlined
 ,EyeInvisibleOutlined  ,
 EyeOutlined } from '@ant-design/icons';
@@ -42,6 +43,7 @@ import colors from './colors/color';
     locakIcons: <UnlockOutlined />,
     fileUploadIcons:<PaperClipOutlined />,
     appStoreOutlined:<AppstoreAddOutlined />,
+    checkIcons:<CheckSquareOutlined className='bg-success text-white fs-5 mx-2'/>,
     eyeVisibleIcon:<EyeOutlined /> ,
     eyeInVisibleIcon:<EyeInvisibleOutlined />,
     templeteIcons: <CaretRightOutlined style={{fontSize:"15px"}}/>,
