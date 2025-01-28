@@ -1,5 +1,5 @@
 import React, {
-  useEffect,
+  // useEffect,
   // useEffect,
   useRef,
   useState,
@@ -25,13 +25,10 @@ export const Cards = ({
   cardId,
   id,
 }) => {
-
-
   // const [itemCardName, setIsCardName] = useState(cardsName);
   const [isAddList, setIsAddList] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [refresh, setRefresh] = useState(false);
-
+  // const [refresh, setRefresh] = useState(false);
 
   const inputValue = useRef(null);
   const dispatch = useDispatch();
@@ -60,10 +57,8 @@ export const Cards = ({
   };
 
   const dragEnd = (event) => {
-    // // console.log("event>>>>", event.target);
 
     event.target.classList.remove("dragging");
-    // // console.log("event.target>>>", event.target.innerText);
   };
 
   const allowDrop = (event) => {
@@ -98,18 +93,11 @@ export const Cards = ({
       console.log(`dragedContent, `, dragedContent);
     }
 
-    // // console.log(`updated Card name, `, itemCardName);
   };
 
   const handleAddList = (e) => {
     setIsAddList(e);
   };
-  useEffect(() => {
-   console.log("ok>>>");
-   
-  }, [refresh , dispatch])
-  
-  
 
   const handleAddCard = async (e) => {
     e.preventDefault();
@@ -125,13 +113,10 @@ export const Cards = ({
         boardId: String(boardId),
         title: description,
       };
-      // await dispatch(addList({title : description}))
       const response = await dispatch(addList(finalobj));
-      
 
       if (response) {
         toast.success("List Added Successfully");
-
       }
     } else {
       const taskDescription =
@@ -140,26 +125,25 @@ export const Cards = ({
         title: taskDescription,
         cardId: inputValue?.current?.resizableTextArea?.textArea?.id,
       };
-      const response =await dispatch(addTask(finalobj));
+      const response = await dispatch(addTask(finalobj));
       if (response?.payload.status === 200) {
         toast.success("Task Added Successfully");
-        setTimeout(() => {
-          setRefresh((prev) => !prev);
+        // setTimeout(() => {
+        //   setRefresh((prev) => !prev);
 
-        }, 2000);
-        
+        // }, 2000);
       }
     }
-    // const newItem = inputValue?.current?.resizableTextArea?.textArea?.value;
-    // if (newItem) {
-    //   setItems([...items, { description: newItem }]);
-    // }
-    // console.log("items>>>", inputValue?.current?.resizableTextArea?.textArea?.id);
   };
-
+  const isUser = localStorage.getItem("role")?.includes("user");
 
   return (
-    <div className="card-parent d-flex flex-column px-3">
+    <div
+      className="card-parent  flex-column px-3"
+      style={{
+        display: cardsName === "Add New List" && isUser ? "none" : "flex",
+      }}
+    >
       <Card
         key={cardKey}
         title={cardsName}
@@ -171,14 +155,12 @@ export const Cards = ({
         onDrop={drop}
         onDragOver={allowDrop}
       >
-        {cardsName === "Add New List" ? (
+        {cardsName === "Add New List" && !isUser ? (
           " "
-        ) : (data ? (
-          data?.map((item, index) => 
-            
-            {
-              return (
-                <div
+        ) : data.length > 0 ? (
+          data?.map((item, index) => {
+            return (
+              <div
                 key={index}
                 className="parent d-flex justify-content-between bg-white hoverControl rounded-2 m-1 p-2"
                 id={`dragtarget-${index}-${cardsName}`}
@@ -205,15 +187,21 @@ export const Cards = ({
                 )}
                 <div>{icon}</div>
               </div>
-              )
-            }
-           
-          )
+            );
+          })
         ) : (
-          <div>"No Cards in this List "</div>
-        ))}
+          <div
+            className="px-2 mx-1  text-white rounded-2"
+            style={{
+              background:
+                "linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180))",
+            }}
+          >
+            Empty Cards{" "}
+          </div>
+        )}
 
-        {isAddList ? (
+        {isAddList && !isUser ? (
           <div className="textArea-Parent w-100 p-1 border-dark-subtle">
             <TextArea
               id={cardlistId}
@@ -240,7 +228,8 @@ export const Cards = ({
           </div>
         ) : (
           <div
-            className="parent d-flex border-1 justify-content-between bg-white hoverControl rounded-2 m-1 p-2"
+            style={isUser ? { display: "none" } : { display: "flex" }}
+            className="parent   border-1 justify-content-between bg-white hoverControl rounded-2 m-1 p-2"
             onClick={() =>
               handleAddList(
                 cardsName === "Add New List" ? "listAdd" : "taskAdd"
