@@ -14,6 +14,8 @@ export const CardsSection = ({ dataArray1, workspace_id , boardId }) => {
   const [boardData, setBoardData] = useState([]);
 
   const prevBoardData = useRef();
+  console.log("dataArray1>>>>" , dataArray1);
+  
 
 
   useEffect(() => {
@@ -58,6 +60,7 @@ export const CardsSection = ({ dataArray1, workspace_id , boardId }) => {
       <div className="card1 d-flex justify-content-between">
         {boardData ? (
           boardData?.map((items, index) => {
+
             
             return (
               <Cards

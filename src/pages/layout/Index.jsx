@@ -21,6 +21,7 @@ import SignUp from "../signUp/SignUp";
 import SignIn from "../signIn/SignIn";
 import EditProfile from "../editProfile/EditProfile";
 import { useRoutFunction } from "../../assets/usefulFunctions/UseFullFunctions";
+import Loader from "../../assets/loader/Loader";
 
 // import {Inputs} from "../../assets/input/Inputs"
 // import DraggableComponent from "../../components/dragAndDrop/DraggableComponent";
@@ -34,6 +35,7 @@ const Index = () => {
   const [isBoardName, setIsBoardName] = useState({});
 
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoadimg] = useState(false);
 
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
@@ -92,10 +94,18 @@ const Index = () => {
       
       
 const userData=localStorage.getItem("role")?.includes("user")
+setIsLoadimg(true)
+      setTimeout(() => {
+        setIsLoadimg(false)
+      }, 3000);
       dispatch(getDashboardData(userData));
       
     }
     else{
+      setIsLoadimg(true)
+      setTimeout(() => {
+        setIsLoadimg(false)
+      }, 3000);
       dispatch(getDashboardData());
 
     }
@@ -150,7 +160,8 @@ const userData=localStorage.getItem("role")?.includes("user")
         backgroundColor: colors.theme,
       }}
     >
-      {(Array.isArray(getAdminDashboardData) && getAdminDashboardData.length > 0) ? 
+      {(Array.isArray(getAdminDashboardData) && getAdminDashboardData.length > 0 ) ? 
+      
       <>
       <Sider
         width={!collapsed ? "250" : "20"}
@@ -231,6 +242,7 @@ const userData=localStorage.getItem("role")?.includes("user")
           )}
         </div>
       </Sider>
+     
       <Layout>
         <div
           style={{
@@ -352,6 +364,11 @@ const userData=localStorage.getItem("role")?.includes("user")
         </div>
       </Layout>
       </>
+    :
+    isLoading ? <div className="d-flex justify-content-center vh-100 align-items-center"
+    style={{background:"linear-gradient(60deg, rgb(82, 67, 170), rgb(237, 80, 180)) "}}>
+    <Loader />
+   </div>
     :
     <div className="backgroundforNoWorkSpace vh-100 d-flex align-items-center justify-content-center">
           Your Request is Still in pending Please Wait for the Approval
