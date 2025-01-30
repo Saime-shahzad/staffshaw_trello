@@ -28,7 +28,6 @@ export const Header = () => {
   const getAdminDashboardData = useSelector(
     (state) => state.globalData?.dashboardData
   );
-  console.log("getAdminDashboardData>>" , getAdminDashboardData);
 
   const handleOpenChange = (newOpen) => {
     setOpen(newOpen);
@@ -36,10 +35,14 @@ export const Header = () => {
 
   useEffect(() => {
     if(!localStorage.getItem("role")?.includes("user")){
-
+      
+      
       dispatch(getWorkspaces());
     }
-    dispatch(getDashboardData());
+    else{
+
+      dispatch(getDashboardData());
+    }
   }, [dispatch, isBoardName]);
 
   const projectsNames = [

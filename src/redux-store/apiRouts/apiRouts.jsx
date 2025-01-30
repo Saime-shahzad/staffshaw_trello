@@ -4,6 +4,8 @@ export const domain =
   "https://checkyourproject.website/shaffshaw-trello/api/v1";
 
 const token = localStorage.getItem("token");
+console.log("token>>>>" , token);
+
 export const userRequest = axios.create({
   baseURL: domain,
   headers: {

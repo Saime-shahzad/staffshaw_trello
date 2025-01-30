@@ -29,6 +29,7 @@ export const getDashboardData = createAsyncThunk(
       if(dashboardData){
         
         
+        
         const response = await userRequest.get("user/dashboard");
       
         
@@ -104,8 +105,9 @@ const globalSlice = createSlice({
       state.error = null;
     });
     builder.addCase(getDashboardData.fulfilled, (state, action) => {
+      
       state.loading = false;
-      state.dashboardData = action.payload.data.workspaces; // Store the last clicked item
+      state.dashboardData = action?.payload?.data?.workspaces; // Store the last clicked item
     });
     builder.addCase(getDashboardData.rejected, (state, action) => {
       state.loading = false;

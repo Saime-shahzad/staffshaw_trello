@@ -20,6 +20,7 @@ export const getUsers = createAsyncThunk(
   "user/getUsers",
   async (userData, { rejectWithValue }) => {
     
+    
     try {
       const response = await userRequest.get("/admin/users-list", userData);
       
@@ -47,8 +48,21 @@ export const getUserDetails = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     
     try {
-      const response = await userRequest.post("/register", userData);
-      return response.data;
+      if(userData){
+
+        const response = await userRequest.get("user/profile", userData);
+        console.log("response>>>>" , response);
+        
+        return response.data;
+      }
+      else{
+        
+        const response = await userRequest.get("admin/profile", userData);
+        console.log("response>>>>" , response);
+        return response.data;
+      }
+      // const response = await userRequest.get("/register", userData);
+      // return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -114,7 +128,7 @@ const userSlice = createSlice({
     });
     builder.addCase(getUserDetails.fulfilled, (state, action) => {
       state.loading = false;
-      state.userProfileData = action.payload;
+      state.userProfileData = action.payload.data;
     });
     builder.addCase(getUserDetails.rejected, (state, action) => {
       state.loading = false;

@@ -25,13 +25,14 @@ const SignIn = () => {
       required: true,
     },
     {
-      id: 1,
+      id: 2,
       label: "Password",
       name: "password",
       type: "password",
       message: "Password is Required",
       required: true,
     },
+    
   ];
 
  

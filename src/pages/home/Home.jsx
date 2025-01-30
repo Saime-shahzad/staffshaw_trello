@@ -11,10 +11,9 @@ const Home = () => {
   const [isToken, setIsToken] = useState(false);
   const location = useLocation();
   const routeTo = useRoutFunction();
-  console.log("roles for user" , localStorage.getItem("role")?.includes("user"));
-  
+  const token=localStorage.getItem("token")
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (token && token !== undefined) {
       setIsToken(true);
     } 
     else if(location.pathname === "/sign-up"){
@@ -24,7 +23,7 @@ const Home = () => {
       routeTo("/sign-in")
 
     }
-  }, [isToken, routeTo , location.pathname]);
+  }, [isToken, routeTo , location.pathname , token ]);
  
   
   return (

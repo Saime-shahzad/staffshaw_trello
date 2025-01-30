@@ -7,6 +7,8 @@ import {
 } from "antd";
 import { Inputs } from "../input/Inputs";
 import Loader from "../loader/Loader";
+import { useLocation } from "react-router-dom";
+import { useRoutFunction } from "../usefulFunctions/UseFullFunctions";
 
 const Forms = ({
   form,
@@ -21,6 +23,9 @@ const Forms = ({
   initialValues,
   multiple
 }) => {
+  const location=useLocation()
+  const routeTo=useRoutFunction()
+  
   return (
     <Form
     form={form}
@@ -112,6 +117,7 @@ const Forms = ({
     </Form.Item> */}
 
           <Form.Item
+          className=""
             wrapperCol={
               {
                 // offset: 8,
@@ -119,9 +125,22 @@ const Forms = ({
               }
             }
           >
+            <div className="d-flex w-100 justify-content-between align-items-center">
+
+          
             <Button type="primary" disabled={formTitle === "Profile" ? true : false} htmlType="submit">
               {buttonName}
             </Button>
+            {
+              (location.pathname === "/sign-in" || location.pathname === "/sign-up") &&
+
+            <div   >
+              {location.pathname === "/sign-up" ? <div  style={{fontSize:"14px"}}>Alredy Regestered!?<span className="text-info" style={{cursor:"pointer" }}  onClick={() => routeTo("/sign-in")}  >
+                &nbsp;Sign In</span> </div>
+                : 
+                <div style={{fontSize:"14px"}}>Not Regestered Yet? <span className="text-info" style={{cursor:"pointer" }} onClick={() => routeTo("/sign-up")} > Sign Up</span> </div>} </div>
+            }
+            </div>
           </Form.Item>
         </>
       )}
