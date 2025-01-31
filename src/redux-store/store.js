@@ -13,7 +13,7 @@ const store = configureStore({
     user:userSlice,
     boardCards:boardCardsSlice,
     globalData:globalSlice,
-    updateCards:cardsSlice,
+    cards:cardsSlice,
   
     // passwordReset: forgetPasswordReducer,
   },

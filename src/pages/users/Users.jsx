@@ -3,7 +3,7 @@ import React, {
     // useRef,
      useState } from 'react'
 import Tables from '../../components/tables/Tables'
-import { Buttons } from '../../assets/button/Buttons'
+// import { Buttons } from '../../assets/button/Buttons'
 import Modals from '../../assets/modals/Modals'
 import { useDispatch } from 'react-redux'
 import { getUsers } from '../../redux-store/users/userSlice'
@@ -21,9 +21,9 @@ export const Users = () => {
        dispatch(getUsers())
         
     }, [dispatch])
-    const handleuserAddModal=(() =>{
-        setIsModalOpen(true)
-    })
+    // const handleuserAddModal=(() =>{
+    //     setIsModalOpen(true)
+    // })
    const credentislList=[
     {
         placeholder:"Enter Name",
@@ -43,9 +43,9 @@ export const Users = () => {
    ]
   return (
     <div className='User-parrent'>
-        <div className='button-parrent my-2'>
+        {/* <div className='button-parrent my-2'>
         <Buttons className="text-white border-0" onClick={handleuserAddModal} text="Add User"  />
-        </div>
+        </div> */}
         <div className='table-parrent'>
         <Tables data={getusersData} />
         </div>

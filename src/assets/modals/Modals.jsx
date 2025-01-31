@@ -1,4 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  //  useEffect, 
+  useRef, useState } from "react";
 import { Modal } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import ImageDragDrop from "../imagedragdrop/ImageDragDrop";
@@ -10,13 +13,14 @@ import colors from "../colors/color";
 import { Inputs } from "../input/Inputs";
 import Loader from "../loader/Loader";
 import { toast } from "react-toastify";
-import { getUsers } from "../../redux-store/users/userSlice";
+// import { getUsers } from "../../redux-store/users/userSlice";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import {
   addCardMember,
   updateCardsData,
 } from "../../redux-store/cardsSlice/cardsSlice";
+import { Buttons } from "../button/Buttons";
 const Modals = ({
   isModalOpen,
   setIsModalOpen,
@@ -24,15 +28,17 @@ const Modals = ({
   content,
   cardName,
   body,
+  viewCardData,
   title,
 }) => {
   const [isLoader, setIsLoader] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [openTextField, setOpenTextField] = useState(false);
   const dispatch = useDispatch();
-  const getusersData = useSelector((state) => state.user?.user);
-  useEffect(() => {
-    dispatch(getUsers());
-  }, [dispatch]);
+  // const getusersData = useSelector((state) => state.user?.user);
+  // useEffect(() => {
+  //   dispatch(getUsers());
+  // }, [dispatch]);
 
   const inputValue = useRef(null);
   let userDetailObj = {
@@ -40,6 +46,8 @@ const Modals = ({
     userPassword: "",
     userEmail: "",
   };
+  console.log("viewCardData>>>>" , viewCardData);
+  
   const handleInputValue = (e) => {
     console.log("e>>>", e.currentTarget);
     if (e.currentTarget.type === "Enter Name") {
@@ -47,6 +55,12 @@ const Modals = ({
       return userDetailObj;
     }
   };
+  useEffect(() => {
+   if(viewCardData && viewCardData){
+    setSelectedUsers(viewCardData?.members)
+   }
+  }, [viewCardData])
+  
 
   const handleOk = async () => {
     const getValue = inputValue?.current?.input?.value;
@@ -56,24 +70,28 @@ const Modals = ({
       setTimeout(() => {
         setIsLoader(false);
         setIsModalOpen(false);
-        toast.success(<div> &nbsp; Successfully Send </div>);
+        toast.success(<div> &nbsp; Successfully Added </div>);
       }, 3000);
     } else if (getValue2 ) {
       const userData = {
-        cardId: content?.id,
+        cardId: viewCardData?.card?.id,
         card_description: getValue2,
       };
 
+      setIsLoader(true);
       const response = await dispatch(updateCardsData(userData));
-      console.log("response>>>>", response);
 
-      // setIsLoader(true);
+if(response?.payload?.status){
 
-      // setTimeout(() => {
-      //   setIsLoader(false);
-      //   setIsModalOpen(false);
-      //   toast.success(<div> &nbsp; Successfully Send </div>);
-      // }, 3000);
+  setTimeout(() => {
+    setIsLoader(false);
+    setIsModalOpen(false);
+    toast.success(<div> &nbsp; Successfully Updated </div>);
+  }, 3000);
+}
+else{
+  toast.error("Issues In Updating")
+}
 
       /// kal say ma yahin say kaam start kronga
     } else {
@@ -102,23 +120,30 @@ const Modals = ({
     const member_id = item?.id;
     if (member_id) {
       const userData = {
-        cardId: content?.id,
+        cardId: viewCardData?.card?.id,
         member_id: member_id,
       };
-      // setIsLoader(true);
+      setIsLoader(true);
       const response = await dispatch(addCardMember(userData));
-      console.log("response>>>>", response);
+      console.log("response>>>" , response);
+      
 
-      // setTimeout(() => {
-      //   setIsLoader(false);
-      //   setIsModalOpen(false);
-      //   toast.success(<div> &nbsp; Successfully Send </div>);
-      // }, 3000);
+      if(response?.payload?.status){
+      
+        setTimeout(() => {
+          setIsLoader(false);
+          setIsModalOpen(false);
+          toast.success(<div> &nbsp; Successfully Updated </div>);
+        }, 3000);
+      }
+      else{
+        toast.error("Issues In Updating")
+      }
     }
 
     setSelectedUsers((prevSelectedUsers) => {
       if (!prevSelectedUsers.includes(item?.full_name)) {
-        return [...prevSelectedUsers, item?.full_name];
+        return [...prevSelectedUsers,{full_name: item?.full_name}];
       }
       return prevSelectedUsers;
     });
@@ -136,7 +161,7 @@ const Modals = ({
     {
       tabName: "Members",
       tabIcons: icons.peopleGroupIcon,
-      component: <ModalPopups onClick={getSelectedValue} data={getusersData} />,
+      component: <ModalPopups onClick={getSelectedValue} data={viewCardData?.allUsers} />,
     },
     {
       tabName: "Labels",
@@ -164,18 +189,26 @@ const Modals = ({
               title
             ) : (
               <div>
-                <div>{title || cardName}</div>
-                <div style={{ fontSize: "14px", color: "gray" }}>
+                <div>{title || viewCardData?.card?.title}</div>
+                {!isLoader && <div style={{ fontSize: "14px", color: "gray" }}>
                   {content?.title}
-                </div>
+                </div>}
               </div>
             )
           }
           open={isModalOpen}
-          onOk={handleOk}
+          // onOk={handleOk}
           onCancel={handleCancel}
           width={600}
-          okButtonProps={{ style: { backgroundColor: "#172b4d" } }}
+          okButtonProps={{ style: { backgroundColor: "#172b4d" 
+            , display:viewCardData?.card?.title ? "none" :"flex"
+          } }
+        
+        }
+        cancelButtonProps={{ style: { backgroundColor: "#172b4d" 
+          , display:viewCardData?.card?.title ? "none" :"flex"
+        } }}
+        
 
           //   style={{backgroundColor:colors.ModalColor}}
         >
@@ -209,12 +242,31 @@ const Modals = ({
                         </div>
 
                         <div className="detail-Input-Description ">
+                          {(viewCardData?.card?.description && !openTextField)? 
+                        <div className="viewDescription-parent">
+                          <div>
+
+                          {viewCardData?.card?.description }
+                            </div>
+                            <div className="edit-description-button text-info" style={{cursor:"pointer"}} onClick={() => setOpenTextField(true)}>
+                              Add More?
+                            </div>
+                          </div>  :
+
+                            <div>
+                           
                           <TextArea
                             ref={inputValue}
                             placeholder="Make your Description even better with details"
                             className="textArea-control"
                             autoSize={{ minRows: 3, maxRows: 5 }}
                           />
+                          <div className="buttons-parent d-flex pt-1">
+                            <Buttons text="Cancel" className="bg-white "   onClick={() => setOpenTextField(false)} />
+                            <Buttons text="Add" className="buttonstyle mx-2" onClick={handleOk}/>
+                            </div>
+                           </div>
+                        }
                           <ImageDragDrop />
                         </div>
                       </div>
@@ -246,6 +298,8 @@ const Modals = ({
                         })}
                         <div>
                           {selectedUsers?.map((item) => {
+                            console.log("item>>>", item);
+                            
                             return (
                               <div className="mt-1">
                                 {/* <sup className="p-1 ronded-2 " value={item} onClick={(e) => handleRemoveName(e)} style={{backgroundColor:"lightgrey" , cursor:"pointer"}}>
@@ -255,9 +309,10 @@ const Modals = ({
                                   className=" rounded-circle bg-info mx-1 p-1"
                                   style={{ cursor: "pointer" }}
                                 >
-                                  {item?.split("")[0]}{" "}
+                                  {/* {item.full_name}{" "} */}
+                                  {item?.full_name.split("")[0]}{" "}
                                 </span>{" "}
-                                {item}
+                                {item.full_name}
                               </div>
                             );
                           })}

@@ -1,9 +1,4 @@
-import React, {
-  // useEffect,
-  // useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useRef, useState } from "react";
 import { Card } from "antd";
 import "./Cards.css";
 import TextArea from "antd/es/input/TextArea";
@@ -14,6 +9,7 @@ import { addList } from "../../redux-store/listSlice/listSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { addTask } from "../../redux-store/task/taskSlice";
+import { viewCardData } from "../../redux-store/cardsSlice/cardsSlice";
 
 export const Cards = ({
   icon,
@@ -28,10 +24,13 @@ export const Cards = ({
   // const [itemCardName, setIsCardName] = useState(cardsName);
   const [isAddList, setIsAddList] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewCardData, setIsViewCardDtata] = useState({});
   // const [refresh, setRefresh] = useState(false);
 
   const inputValue = useRef(null);
   const dispatch = useDispatch();
+
+  console.log("isViewCardData>>>>>", isViewCardData);
 
   const dragStart = (event, itemId) => {
     event.dataTransfer.setData(
@@ -57,7 +56,6 @@ export const Cards = ({
   };
 
   const dragEnd = (event) => {
-
     event.target.classList.remove("dragging");
   };
 
@@ -92,7 +90,6 @@ export const Cards = ({
       };
       console.log(`dragedContent, `, dragedContent);
     }
-
   };
 
   const handleAddList = (e) => {
@@ -136,6 +133,12 @@ export const Cards = ({
     }
   };
   const isUser = localStorage.getItem("role")?.includes("user");
+  const handleViewCardData = async (item) => {
+    setIsModalOpen(true);
+    const userData = item;
+    const response = await dispatch(viewCardData(userData));
+    setIsViewCardDtata(response && response?.payload.data);
+  };
 
   return (
     <div
@@ -159,7 +162,6 @@ export const Cards = ({
           " "
         ) : data.length > 0 ? (
           data?.map((item, index) => {
-            
             return (
               <div
                 key={index}
@@ -174,7 +176,7 @@ export const Cards = ({
               >
                 <div
                   className="description-parent"
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={() => handleViewCardData(item?.id)}
                 >
                   {item.title}
                 </div>
@@ -182,6 +184,7 @@ export const Cards = ({
                   <Modals
                     isModalOpen={isModalOpen}
                     setIsModalOpen={setIsModalOpen}
+                    viewCardData={isViewCardData}
                     content={item}
                     cardName={cardsName}
                   />
