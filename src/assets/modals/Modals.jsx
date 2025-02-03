@@ -338,7 +338,7 @@ else{
                         Assign To
                         
                       </div>
-                          {selectedUsers.length && selectedUsers?.map((item) => {
+                          { selectedUsers?.map((item) => {
                             
                             return (
                               <div className="mt-1">
