@@ -4,16 +4,15 @@ import trelloLogo from "../../assets/images/trelloLogo.png";
 
 import "./SignIn.css";
 import { toast } from "react-toastify";
-import { useDispatch } from 'react-redux'
-import { loginUser } from '../../redux-store/auth/authSlice'
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../redux-store/auth/authSlice";
 import { useRoutFunction } from "../../assets/usefulFunctions/UseFullFunctions";
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const routeTo=useRoutFunction()
+  const routeTo = useRoutFunction();
 
-
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
 
   const formContent = [
     {
@@ -32,42 +31,29 @@ const SignIn = () => {
       message: "Password is Required",
       required: true,
     },
-    
   ];
 
- 
-  const onFinish = (async(values) => {
-    
-    setIsLoading(true)
+  const onFinish = async (values) => {
+    setIsLoading(true);
     const res = await dispatch(loginUser(values));
-    console.log('res:', res);
-    
-    
-    
-    if(res.error){
-      
-      setTimeout(() => {
-        toast.error(res.payload.message)
-        setIsLoading(false)
-        
-        
-        
-      }, 2000);
-      
-    }
-    else{
-      setTimeout(() => {
-        localStorage.setItem("token" , res.payload?.data.token)
-      toast.success("Successfully Login");
-      setIsLoading(false)
-      // window.location.assign("/");
-      routeTo("/" , res.payload?.data.roles )
-      localStorage.setItem("role" , res.payload?.data.roles )
-      window.location.reload()
-    }, 2000);
 
-  }
-});
+    if (res.error) {
+      setTimeout(() => {
+        toast.error(res.payload.message);
+        setIsLoading(false);
+      }, 2000);
+    } else {
+      setTimeout(() => {
+        localStorage.setItem("token", res.payload?.data.token);
+        toast.success("Successfully Login");
+        setIsLoading(false);
+        // window.location.assign("/");
+        routeTo("/", res.payload?.data.roles);
+        localStorage.setItem("role", res.payload?.data.roles);
+        window.location.reload();
+      }, 2000);
+    }
+  };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
