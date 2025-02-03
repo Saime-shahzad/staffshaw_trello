@@ -90,7 +90,6 @@ const Index = () => {
   useEffect(() => {
     // if(location.state[0] === "team_member" || location.state[0] === "user" ){
     if(localStorage.getItem("role")?.includes("user") ){
-      console.log("ok>>");
       
       
 const userData=localStorage.getItem("role")?.includes("user")
