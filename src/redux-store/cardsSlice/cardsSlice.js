@@ -37,16 +37,40 @@ export const viewCardData = createAsyncThunk(
   "cards/viewCardData",
   async (userData, { rejectWithValue }) => {
     try {
-        const response = await userRequest.get(`admin/list-cards/view-card/${userData}`);
+        if(userData?.isUser){
+            const response = await userRequest.get(`user/list-cards/view-card/${userData.item}`);
+            
+            return response.data;
+        }
+        else{
+            const response = await userRequest.get(`admin/list-cards/view-card/${userData.item}`);
 
-      // const response = await userRequest.post("/login", userData);
-      return response.data;
+    
+          // const response = await userRequest.post("/login", userData);
+          return response.data;
+        }
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
 
+export const addCardsAttachment = createAsyncThunk(
+    "cards/addCardsAttachment",
+    async (userData, { rejectWithValue }) => {
+      console.log("userData>>>" , userData);
+  
+      try {
+        const response = await userRequest.post(`admin/list-cards/upload-card-attachment/${userData?.cardId}`, userData);
+  console.log("response apiS", response);
+  
+        // const response = await userRequest.post("/login", userData);
+        return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  );
 
 
 
@@ -55,6 +79,7 @@ const cardsSlice = createSlice({
   initialState: {
    updateCards: [],
    cardData: [],
+   cardAttachment: [],
     loading: false,
     error: null,
   },
@@ -93,13 +118,27 @@ const cardsSlice = createSlice({
       state.error = null;
     });
     builder.addCase(viewCardData.fulfilled, (state, action) => {
-console.log("action.PAYLOAD>>>", action.payload);
 
       state.loading = false;
 
       state.cardData= action.payload.data;
     });
     builder.addCase(viewCardData.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+/// crds  Attachment work
+    builder.addCase(addCardsAttachment.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(addCardsAttachment.fulfilled, (state, action) => {
+
+      state.loading = false;
+
+      state.cardAttachment= action.payload.data;
+    });
+    builder.addCase(addCardsAttachment.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });
