@@ -135,7 +135,10 @@ export const Cards = ({
   const isUser = localStorage.getItem("role")?.includes("user");
   const handleViewCardData = async (item) => {
     setIsModalOpen(true);
-    const userData = item;
+    const userData = {
+      item:item,
+      isUser:isUser,
+    }
     const response = await dispatch(viewCardData(userData));
     setIsViewCardDtata(response && response?.payload.data);
   };
