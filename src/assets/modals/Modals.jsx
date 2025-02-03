@@ -190,7 +190,7 @@ else{
             ) : (
               <div>
                 <div>{title || viewCardData?.card?.title}</div>
-                {!isLoader && <div style={{ fontSize: "14px", color: "gray" }}>
+                {!isLoader && <div style={{ fontSize:  "14px" , color:  "gray"  }}>
                   {content?.title}
                 </div>}
               </div>
@@ -201,12 +201,12 @@ else{
           onCancel={handleCancel}
           width={600}
           okButtonProps={{ style: { backgroundColor: "#172b4d" 
-            , display:viewCardData?.card?.title ? "none" :"flex"
+            , display:viewCardData?.card?.title || isUser ? "none" :"flex"
           } }
         
         }
         cancelButtonProps={{ style: { backgroundColor: "#172b4d" 
-          , display:viewCardData?.card?.title ? "none" :"flex"
+          , display:viewCardData?.card?.title || isUser ? "none" :"flex"
         } }}
         
 
@@ -296,9 +296,12 @@ else{
                             </div>
                           );
                         })}
-                        <div>
+                        <div className=" px-2">
+                        <div style={{color:"#172b4d" , fontWeight:"bold"}}>
+                        Assign To
+                        
+                      </div>
                           {selectedUsers?.map((item) => {
-                            console.log("item>>>", item);
                             
                             return (
                               <div className="mt-1">
@@ -320,7 +323,42 @@ else{
                       </div>
                     </>
                   ) : (
-                    content?.title
+                    <>
+                    <div className="descriptionForUser-parent">
+                      <div style={{color:"#172b4d" , fontWeight:"bold"}}>
+                        Card Description
+                        
+                      </div>
+                      <div>
+                        {viewCardData?.card?.description}
+                        </div>
+                      </div>
+                      <div className="">
+                      <div style={{color:"#172b4d" , fontWeight:"bold"}}>
+                        Assign To
+                        
+                      </div>
+                          {selectedUsers.length && selectedUsers?.map((item) => {
+                            
+                            return (
+                              <div className="mt-1">
+                                {/* <sup className="p-1 ronded-2 " value={item} onClick={(e) => handleRemoveName(e)} style={{backgroundColor:"lightgrey" , cursor:"pointer"}}>
+                            {icons.popupclose}
+                            </sup> */}
+                            
+                                <span
+                                  className=" rounded-circle bg-info mx-1 p-1"
+                                  style={{ cursor: "pointer" }}
+                                >
+                                  {/* {item.full_name}{" "} */}
+                                  {item?.full_name.split("")[0]}{" "}
+                                </span>{" "}
+                                {item.full_name}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </>
                   )}
                 </div>
               )}
