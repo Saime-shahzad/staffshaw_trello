@@ -201,6 +201,9 @@ const handleComment=async () =>{
       toast.success(<div> &nbsp; Successfully Added </div>);
     }, 3000);
   }
+  else{
+    toast.warning("Invalid Comment")
+  }
   
 }
   return (
