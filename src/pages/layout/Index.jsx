@@ -52,6 +52,7 @@ const Index = () => {
   const getAdminDashboardData = useSelector(
     (state) => state.globalData?.dashboardData
   );
+  console.log("getAdminDashboardData>>>" , getAdminDashboardData);
   
 
   const dynamicSideBarItems = [

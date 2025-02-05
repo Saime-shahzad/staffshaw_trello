@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { userRequest } from "../apiRouts/apiRouts";
+import { userRequest, userRequestForMultipart } from "../apiRouts/apiRouts";
 // import axios from "axios";
 
 export const updateCardsData = createAsyncThunk(
@@ -61,11 +61,38 @@ export const addCardsAttachment = createAsyncThunk(
       console.log("userData>>>" , userData);
   
       try {
-        const response = await userRequest.post(`admin/list-cards/upload-card-attachment/${userData?.cardId}`, userData);
+        const response = await userRequestForMultipart.post(`admin/list-cards/upload-card-attachment/${userData?.cardId}`, userData);
   console.log("response apiS", response);
   
         // const response = await userRequest.post("/login", userData);
         return response.data;
+      } catch (error) {
+        return rejectWithValue(error.response.data);
+      }
+    }
+  );
+export const addCardComment = createAsyncThunk(
+    "cards/addCardComment",
+    async (userData, { rejectWithValue }) => {
+      console.log("userData>>>" , userData);
+      
+      try {
+          if(userData.userRole === "user"){
+    
+            
+              const response = await userRequest.post(`user/list-cards/add-comment/${userData?.cardId}`, userData);
+      console.log("response apiS", response);
+      
+            // const response = await userRequest.post("/login", userData);
+            return response.data;
+          }
+          else{
+            const response = await userRequest.post(`admin/list-cards/add-card-comment/${userData?.cardId}`, userData);
+            console.log("response apiS", response);
+            
+                  // const response = await userRequest.post("/login", userData);
+                  return response.data;
+          }
       } catch (error) {
         return rejectWithValue(error.response.data);
       }

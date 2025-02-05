@@ -14,7 +14,6 @@ export const CardsSection = ({ dataArray1, workspace_id , boardId }) => {
   const [boardData, setBoardData] = useState([]);
 
   const prevBoardData = useRef();
-  console.log("dataArray1>>>>" , dataArray1);
   
 
 

@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 // import { useSelector } from "react-redux";
 import {
+  addCardComment,
   addCardMember,
   updateCardsData,
 } from "../../redux-store/cardsSlice/cardsSlice";
@@ -46,7 +47,7 @@ const Modals = ({
     userPassword: "",
     userEmail: "",
   };
-  console.log("viewCardData>>>>" , viewCardData);
+  console.log("viewCardData >>>>" , viewCardData);
   
   const handleInputValue = (e) => {
     console.log("e>>>", e.currentTarget);
@@ -137,7 +138,7 @@ else{
         }, 3000);
       }
       else{
-        toast.error("Issues In Updating")
+        toast.error("Issues InUpdating ")
       }
     }
 
@@ -179,7 +180,29 @@ else{
 
   //   })
   const isUser = localStorage.getItem("role")?.includes("user");
+const handleComment=async () =>{
+  const commentValue = inputValue?.current.resizableTextArea.textArea.value;
+  if (commentValue) {
+    const userData={
+      userRole:isUser, 
+      comment:commentValue,
+      user_id:localStorage.getItem("userId"),
+      cardId:viewCardData?.card?.id
 
+    }
+    
+    const response = await dispatch(addCardComment(userData));
+    console.log("ok>>>response" , response); 
+
+    setIsLoader(true);
+    setTimeout(() => {
+      setIsLoader(false);
+      // setIsModalOpen(false)
+      toast.success(<div> &nbsp; Successfully Added </div>);
+    }, 3000);
+  }
+  
+}
   return (
     <>
       <div className="modal-parrent-div">
@@ -267,7 +290,8 @@ else{
                             </div>
                            </div>
                         }
-                          <ImageDragDrop />
+                          <ImageDragDrop cardData={viewCardData} />
+
                         </div>
                       </div>
                       <div className="addToCard-Parrent  w-25">
@@ -327,12 +351,13 @@ else{
                     <div className="descriptionForUser-parent">
                       <div style={{color:"#172b4d" , fontWeight:"bold"}}>
                         Card Description
-                        
+                      
                       </div>
                       <div>
                         {viewCardData?.card?.description}
                         </div>
                       </div>
+                      
                       <div className="">
                       <div style={{color:"#172b4d" , fontWeight:"bold"}}>
                         Assign To
@@ -360,8 +385,42 @@ else{
                         </div>
                       </>
                   )}
+                
                 </div>
+
               )}
+              <div className="comment-section-parent">
+                <span style={{color:"#172b4d" , fontWeight:"bold"}} >
+                  Comments
+                </span>
+            <div className="text-areaa-parent">
+              {viewCardData?.comments?.map((item) => {
+                return(
+                  <div className="bg-white rounded-2 my-2 w-50 p-3">
+                    {item.comment}
+                    <div className="text-end text-warning">
+                      saime
+                    </div>
+                    </div>
+                )
+                
+              })}
+
+                  <TextArea className="w-50"
+        placeholder="Comment"
+        ref={inputValue}
+
+        autoSize={{
+          minRows: 2,
+          maxRows: 6,
+        }}
+
+      />
+      <div className="button-parent d-flex justify-content-end w-50 pt-2">
+        <Buttons text="Send" onClick={handleComment} className="buttonstyle d-flex justify-con" />
+      </div>
+              </div>
+              </div>
             </div>
           )}
         </Modal>

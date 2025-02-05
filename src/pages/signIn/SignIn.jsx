@@ -36,6 +36,8 @@ const SignIn = () => {
   const onFinish = async (values) => {
     setIsLoading(true);
     const res = await dispatch(loginUser(values));
+   localStorage.setItem("userId",res.payload?.data.user.id)
+     
 
     if (res.error) {
       setTimeout(() => {
@@ -52,6 +54,7 @@ const SignIn = () => {
         localStorage.setItem("role", res.payload?.data.roles);
         window.location.reload();
       }, 2000);
+    
     }
   };
   const onFinishFailed = (errorInfo) => {

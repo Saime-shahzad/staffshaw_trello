@@ -19,6 +19,7 @@ import {
     PaperClipOutlined,
     AppstoreAddOutlined,
     CheckSquareOutlined,
+    FileTextOutlined,
     UnlockOutlined
 ,EyeInvisibleOutlined  ,
 EyeOutlined } from '@ant-design/icons';
@@ -46,6 +47,7 @@ import colors from './colors/color';
     checkIcons:<CheckSquareOutlined className='bg-success text-white fs-5 mx-2'/>,
     eyeVisibleIcon:<EyeOutlined /> ,
     eyeInVisibleIcon:<EyeInvisibleOutlined />,
+    filePdfOutlinedIcon:<FileTextOutlined  style={{fontSize:"50px" , color:"white"}} />,
     templeteIcons: <CaretRightOutlined style={{fontSize:"15px"}}/>,
     sidebarOpen: <RightOutlined style={{backgroundColor:colors.darkTheme , padding:"13px" , borderRadius:"10px"}}  />,
   }
