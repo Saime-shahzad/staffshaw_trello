@@ -41,7 +41,6 @@ const ImageDragDrop = (cardData) => {
     setImages((prevImages) => [...prevImages, ...imageFiles]);
 
     // Debugging: log valid files
-    console.log("Valid files:", validFiles);
   };
   useEffect(() => {
     if (cardData?.cardData?.attachments) {

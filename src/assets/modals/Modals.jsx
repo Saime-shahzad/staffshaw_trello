@@ -397,7 +397,7 @@ const Modals = ({
                       </div>
                     );
                   })}
-                  {(cardMembers.length > 0 || !isUser) && (
+                  {(cardMembers?.length > 0 || !isUser) && (
                     <div>
                       <TextArea
                         className="w-50"
