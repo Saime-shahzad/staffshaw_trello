@@ -8,7 +8,6 @@ import { domainForFile } from "../../redux-store/apiRouts/apiRouts";
 const fileTypes = ["JPG", "PNG", "GIF", "JPEG", "PDF", "DOC", "DOCX"];
 
 const ImageDragDrop = (cardData) => {
-  console.log("cardData????", cardData);
 
   const [images, setImages] = useState([]);
   const dispatch = useDispatch();
@@ -46,7 +45,6 @@ const ImageDragDrop = (cardData) => {
   };
   useEffect(() => {
     if (cardData?.cardData?.attachments) {
-      console.log("Attachments Data:", cardData.cardData.attachments);
 
       const validFiles = cardData.cardData.attachments
         .map((fileObj) => {
@@ -76,7 +74,6 @@ const ImageDragDrop = (cardData) => {
         })
         .filter(Boolean); // Remove any null values
 
-      console.log("Processed Image Files:", validFiles);
       setImages(validFiles);
     }
   }, [cardData]);

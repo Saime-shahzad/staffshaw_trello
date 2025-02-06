@@ -94,19 +94,19 @@ const Index = () => {
       
       
 const userData=localStorage.getItem("role")?.includes("user")
+dispatch(getDashboardData(userData));
 setIsLoadimg(true)
       setTimeout(() => {
         setIsLoadimg(false)
       }, 3000);
-      dispatch(getDashboardData(userData));
       
     }
     else{
+      dispatch(getDashboardData());
       setIsLoadimg(true)
       setTimeout(() => {
         setIsLoadimg(false)
       }, 3000);
-      dispatch(getDashboardData());
 
     }
   }, [dispatch, isBoardId , location.state]);
