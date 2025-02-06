@@ -42,6 +42,8 @@ const Modals = ({
   // useEffect(() => {
   //   dispatch(getUsers());
   // }, [dispatch]);
+  console.log("viewCardData>>>" , viewCardData);
+  
 
   const inputValue = useRef(null);
   let userDetailObj = {
@@ -393,7 +395,7 @@ const Modals = ({
                     return (
                       <div className="bg-white rounded-2 my-2 w-50 p-3">
                         {item.comment}
-                        <div className="text-end text-warning">saime</div>
+                        <div className="text-end text-warning">{item?.user.full_name}</div>
                       </div>
                     );
                   })}
