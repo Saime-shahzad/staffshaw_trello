@@ -52,7 +52,6 @@ const Index = () => {
   const getAdminDashboardData = useSelector(
     (state) => state.globalData?.dashboardData
   );
-  console.log("getAdminDashboardData>>>" , getAdminDashboardData);
   
 
   const dynamicSideBarItems = [
@@ -79,11 +78,13 @@ const Index = () => {
           })),
         }))
       : [
+
           {
             key: "no-workspace",
             label: "No Workspace",
             icon: <SettingOutlined />,
           },
+
         ]),
   ];
   
@@ -124,27 +125,36 @@ setIsLoadimg(true)
     } else {
       setIsBoardName(null); // Handle the "No workspaces" case
     }
-  }, [location.pathname, getAdminDashboardData]);
+  }, [location.pathname, getAdminDashboardData ]);
   
 
-  const onMenueClick = async (e, id) => {
+  const onMenueClick = async (e, item) => {
     if (e.preventDefault) {
       e.preventDefault(); // Prevents any default behavior, if applicable
     }
+    
 
-    const clickedItemKey = id ? String(id) : e.key;
+    const clickedItemKey = item?.id ? String(item?.id) : e.key;
 
     const clickedItem2 =
       getAdminDashboardData &&
       getAdminDashboardData.flatMap((item) => {
+        // console.log("item>>>" , item);
+        
         return item.boards?.filter(
           (list) => String(list.id) === clickedItemKey
         );
       });
+      
    
-    if (clickedItem2[0]) {
-      setIsBoardId(clickedItem2[0].id);
-      localStorage.setItem("b-id", clickedItem2[0].id);
+      console.log("getCurrentWiorkSpace1>>>" , getAdminDashboardData); 
+      if (clickedItem2[0]) {
+        setIsBoardId(clickedItem2[0].id);
+        localStorage.setItem("b-id", clickedItem2[0].id);
+        const getCurrentWiorkSpace=getAdminDashboardData?.filter((item) => Number(item?.id) === Number(clickedItem2[0].workspace_id))
+        console.log("getCurrentWiorkSpace>>>" , getCurrentWiorkSpace); 
+    
+      localStorage.setItem("w-id", getCurrentWiorkSpace[0]?.name);
       routeTo("/");
       setIsBoardName(clickedItem2[0] && clickedItem2[0]);
       dispatch(getBoardList(String(clickedItem2[0]?.workspace_id)));
@@ -198,7 +208,7 @@ setIsLoadimg(true)
                   <>
                     {item.key === "sub1" ? (
                       <Menu
-                        onClick={(e) => onMenueClick(e)}
+                        onClick={(e) => onMenueClick(e , item)}
                         className=" custom-menu"
                         style={{
                           width: "100%",

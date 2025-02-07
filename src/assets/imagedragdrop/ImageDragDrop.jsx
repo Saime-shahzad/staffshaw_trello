@@ -77,6 +77,7 @@ const ImageDragDrop = (cardData) => {
     }
   }, [cardData]);
 
+  const isUser = localStorage.getItem("role")?.includes("user");
   
   return (
     <div>
@@ -95,6 +96,7 @@ const ImageDragDrop = (cardData) => {
             border: "none",
             cursor: "pointer",
             width: "130px",
+            display:isUser ? "none" : "flex"
           }}
           className="mt-2"
         >
@@ -113,20 +115,17 @@ const ImageDragDrop = (cardData) => {
         {images.map((image, index) => (
           <div
             key={index}
-            style={{ display: "flex", margin: "10px", cursor: "pointer" }}
-            onClick={() => {
-                const fileUrl = `${domainForFile}${image.file.path}`;
-                const link = document.createElement("a");
-                link.download = fileUrl; // This will trigger the download
-                link.click(); // Programmatically trigger the click event
-              }}
+            style={{ display: "flex", margin: "10px" }}
+          
+              
+              
           >
             <>
               {image?.file.type === "pdf" || image?.file.type === "docx" ? (
                 <div
                   className=" d-flex justify-content-center align-items-center "
                   style={{
-                    width: "140px",
+                    width: "100px",
                     height: "100px",
                     objectFit: "cover",
                     backgroundColor: "#172b4d",
@@ -147,8 +146,47 @@ const ImageDragDrop = (cardData) => {
               )}
 
               <div className="bg-light p-3">
-                File Name : {image?.file.name}
+                <div className="">File Name : {image?.file.name}</div>
                 <div>type : {image?.file.type}</div>
+                <div className="text-end justify-content-end d-flex">
+                    <div  className="bg-white text-info mx-2" 
+
+                      onClick={() => {
+                        const fileUrl = `${domainForFile}/${image.path}`;
+                        const link = document.createElement("a");
+                        link.href = fileUrl;
+                        link.target = "_blank";
+                        link.setAttribute("download", image.file.name); // Sets the filename
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link); // Clean up after click
+                      }}
+        
+                    
+                    style={{ cursor: "pointer"}} >View</div>
+                    <div  className="bg-white" 
+                    
+                    
+                    style={{ cursor: "pointer"}}
+                      onClick={() => {
+                        const fileUrl = `${domainForFile}/${image.path}`;
+                        
+                        fetch(fileUrl)
+                          .then(response => response.blob()) // Convert to blob
+                          .then(blob => {
+                            const link = document.createElement("a");
+                            link.href = URL.createObjectURL(blob);
+                            link.setAttribute("download", image.file.name || "downloaded-file"); // Force download
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            URL.revokeObjectURL(link.href); // Cleanup
+                          })
+                          .catch(error => console.error("File download error:", error));
+                      }}
+                    
+                    >Download</div>
+                </div>
               </div>
             </>
           </div>

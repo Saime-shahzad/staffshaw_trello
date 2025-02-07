@@ -22,9 +22,9 @@ export const Header = () => {
   const routeTo = useRoutFunction();
   const dispatch = useDispatch();
 
-  const getWorkspacesData = useSelector(
-    (state) => state.globalData?.workspaceData
-  );
+  // const getWorkspacesData = useSelector(
+  //   (state) => state.globalData?.workspaceData
+  // );
   const getAdminDashboardData = useSelector(
     (state) => state.globalData?.dashboardData
   );
@@ -34,13 +34,9 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    if(!localStorage.getItem("role")?.includes("user")){
-      
-      
+    if (!localStorage.getItem("role")?.includes("user")) {
       dispatch(getWorkspaces());
-    }
-    else{
-
+    } else {
       dispatch(getDashboardData());
     }
   }, [dispatch, isBoardName]);
@@ -57,6 +53,8 @@ export const Header = () => {
 
   const getLastIndexs = projectsNames.slice(-2);
 
+  const currentWorkSpaceData = localStorage?.getItem("w-id");
+
   const headerItems = [
     {
       id: "1",
@@ -67,11 +65,18 @@ export const Header = () => {
       id: "2",
       title: "Work Space",
       header: "Current-WorkSpace",
-      component: getWorkspacesData?.map((item) => {
-        return (
-          <Others onClick={(e) => onMenueClick(e, item.id)} items={item.name} />
-        );
-      }),
+
+      component: (
+        <Others
+          onClick={(e) => onMenueClick(currentWorkSpaceData)}
+          items={currentWorkSpaceData}
+        />
+      ),
+      // component: localStorage.getItem("w-id")?.map((item) => {
+      //   return (
+      //     <Others onClick={(e) => onMenueClick(e, item.id)} items={item.name} />
+      //   );
+      // }),
     },
     {
       id: "3",
@@ -116,80 +121,82 @@ export const Header = () => {
     if (clickedItem2[0]) {
       localStorage.setItem("b-id", clickedItem2[0].id);
       routeTo("/");
-      setIsBoardName(clickedItem2[0] && clickedItem2[0]);
+      setIsBoardName(clickedItem2[0]);
     }
   };
+
   return (
     <div
       className="parrent-header d-flex justify-content-between"
       style={{ background: colors.theme }}
     >
       <div className="d-flex  p-2">
-        {(Array.isArray(getAdminDashboardData) && getAdminDashboardData.length > 0) && headerItems?.map((item, index) => {
-          return (
-            <div className="header-ItemsParrent px-2 d-flex fw-bold ">
-              {item.title === "CRM" ? (
-                <div
-                  className="text-white   fs-5 rounded-2 styleButton"
-                  key={index}
-                >
-                  {icons.codePenIcon} {item.title}
-                </div>
-              ) : (
-                <div
-                  className="text-white p-1 fontSizeClass rounded-2 styleButton"
-                  key={index}
-                >
-                  {item.title}{" "}
-                  {!item.title ? (
-                    icons.plusOutlineIcon
-                  ) : (
-                    <Popup
-                      title={item.header}
-                      className="text-white bg-body p-0 bg-transparent border-0"
-                      icon={icons.downIcon}
-                      component={item.component}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
+        {Array.isArray(getAdminDashboardData) &&
+          getAdminDashboardData.length > 0 &&
+          headerItems?.map((item, index) => {
+            return (
+              <div className="header-ItemsParrent px-2 d-flex fw-bold ">
+                {item.title === "CRM" ? (
+                  <div
+                    className="text-white   fs-5 rounded-2 styleButton"
+                    key={index}
+                  >
+                    {icons.codePenIcon} {item.title}
+                  </div>
+                ) : (
+                  <div
+                    className="text-white p-1 fontSizeClass rounded-2 styleButton"
+                    key={index}
+                  >
+                    {item.title}{" "}
+                    {!item.title ? (
+                      icons.plusOutlineIcon
+                    ) : (
+                      <Popup
+                        title={item.header}
+                        className="text-white bg-body p-0 bg-transparent border-0"
+                        icon={icons.downIcon}
+                        component={item.component}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
       </div>
-      
-      <div className="search-Section p-2 d-flex">
-      {(Array.isArray(getAdminDashboardData) && getAdminDashboardData.length > 0) ?
-      <>
-        <div className="searchDiv">
-          <Input
-            placeholder="Search Your Projects"
-            className=" text-white"
-            style={{ background: colors.theme }}
-            value="Search"
-            prefix={icons.searchIcon}
-          />
-        </div>
-        <div
-          className="notificationParrent  mx-3 fs-5"
-          style={{ cursor: "pointer" }}
-        >
-          {/* <Others items="Notification" icon={icons.notificationIcon}   /> */}
-          <Popup
-            title="Notification"
-            icon={icons.notificationIcon}
-            className="text-white bg-body p-0 bg-transparent border-0"
-            component={<NotifactionComp icon={icons.notificationIcon} />}
-          />
 
-          {/* {icons.notificationIcon} */}
-        </div>
-        </>
-        :
-        ""
-        
-        
-        }
+      <div className="search-Section p-2 d-flex">
+        {Array.isArray(getAdminDashboardData) &&
+        getAdminDashboardData.length > 0 ? (
+          <>
+            <div className="searchDiv">
+              <Input
+                placeholder="Search Your Projects"
+                className=" text-white"
+                style={{ background: colors.theme }}
+                value="Search"
+                prefix={icons.searchIcon}
+              />
+            </div>
+            <div
+              className="notificationParrent  mx-3 fs-5"
+              style={{ cursor: "pointer" }}
+            >
+              {/* <Others items="Notification" icon={icons.notificationIcon}   /> */}
+              <Popup
+                title="Notification"
+                icon={icons.notificationIcon}
+                className="text-white bg-body p-0 bg-transparent border-0"
+                component={<NotifactionComp icon={icons.notificationIcon} />}
+              />
+
+              {/* {icons.notificationIcon} */}
+            </div>
+          </>
+        ) : (
+          ""
+        )}
         {/* open if needed */}
         {/* <div className="notificationParrent mx-1 fs-5 ">
           {icons.questionMarkIcon}
@@ -263,7 +270,6 @@ export const Header = () => {
           </Popover>
         </div>
       </div>
-      
 
       {/* for the ardSecction/// */}
 
